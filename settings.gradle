@@ -1,0 +1,3 @@
+rootProject.name = 'vbim2101 - Lakashirdetesek'
+include 'backend'
+include 'desktop'

@@ -1,1 +1,1 @@
-# IDDE laborfeladatok
+# vbim2101 - IDDE labor git repo 2022
