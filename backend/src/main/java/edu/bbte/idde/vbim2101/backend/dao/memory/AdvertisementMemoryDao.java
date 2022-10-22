@@ -31,6 +31,7 @@ public class AdvertisementMemoryDao implements AdvertisementsDao {
         toUpdate.setAddress(advertisement.getAddress());
         toUpdate.setPrice(advertisement.getPrice());
         toUpdate.setSurfaceArea(advertisement.getSurfaceArea());
+        toUpdate.setRooms(advertisement.getRooms());
     }
 
     @Override

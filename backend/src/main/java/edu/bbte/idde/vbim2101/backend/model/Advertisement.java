@@ -5,13 +5,15 @@ public class Advertisement extends BaseEntity {
     private String address;
     private Integer price;
     private Integer surfaceArea;
+    private Integer rooms;
 
-    public Advertisement(String title, String address, Integer price, Integer surfaceArea) {
+    public Advertisement(String title, String address, Integer price, Integer surfaceArea, Integer rooms) {
         super();
         this.title = title;
         this.address = address;
         this.price = price;
         this.surfaceArea = surfaceArea;
+        this.rooms = rooms;
     }
 
     public String getTitle() {
@@ -30,6 +32,10 @@ public class Advertisement extends BaseEntity {
         return surfaceArea;
     }
 
+    public Integer getRooms() {
+        return rooms;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -46,6 +52,10 @@ public class Advertisement extends BaseEntity {
         this.surfaceArea = surfaceArea;
     }
 
+    public void setRooms(Integer rooms) {
+        this.rooms = rooms;
+    }
+
     @Override
     public String toString() {
         return "Advertisement{"
@@ -53,6 +63,7 @@ public class Advertisement extends BaseEntity {
                 + ", address='" + address + '\''
                 + ", price=" + price
                 + ", surfaceArea=" + surfaceArea
+                + ", rooms=" + rooms
                 + '}';
     }
 }
