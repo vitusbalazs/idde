@@ -3,7 +3,7 @@ package edu.bbte.idde.vbim2101.backend.model;
 import java.io.Serializable;
 
 public class BaseEntity implements Serializable {
-    protected long id;
+    protected Long id;
 
     public long getId() {
         return id;
