@@ -1,0 +1,20 @@
+dependencies {
+    implementation project(':backend')
+}
+
+apply plugin: 'application'
+
+application {
+    mainClassName = 'edu.bbte.idde.vbim2101.desktop.Main'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'edu.bbte.idde.vbim2101'
+            artifactId = 'vbim2101-desktop'
+            version = '1.0-SNAPSHOT'
+            from components.java
+        }
+    }
+}
