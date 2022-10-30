@@ -11,7 +11,10 @@ application {
 publishing {
     publications {
         maven(MavenPublication) {
+            groupId = 'edu.bbte.idde.vbim2101'
             artifactId = 'vbim2101-desktop'
+            version = '1.0-SNAPSHOT'
+            from components.java
         }
     }
 }

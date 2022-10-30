@@ -12,23 +12,4 @@ subprojects {
         runtimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.4'
 
     }
-    publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'edu.bbte.idde.vbim2101'
-            version = '1.0-SNAPSHOT'
-            from components.java
-        }
-    }
-    }
 }
-
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            groupId = 'edu.bbte.idde.vbim2101'
-//            version = '1.0-SNAPSHOT'
-//            from components.java
-//        }
-//    }
-//}
