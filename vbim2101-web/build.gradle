@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+dependencies {
+    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '5.0.0'
+    implementation project(':backend')
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    runtimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+}
+
+group 'org.example'
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+def deploymentName = 'vbim2101-web'
+
+def tomcatHome = System.getenv('CATALINA_HOME')
+logger.quiet("Tomcat home detected as '${tomcatHome}'")
+
+task deploy(type: Copy, dependsOn: 'war') {
+    doFirst {
+        if (!tomcatHome) {
+            throw new InvalidUserDataException("Tomcat home (CATALINA_HOME) not set")
+        }
+    }
+
+    from war.archiveFile
+
+    rename war.archiveFileName.get(), "${deploymentName}.war"
+
+    into "${tomcatHome}/webapps"
+
+    logger.quiet("{} deployed to Tomcat", "${deploymentName}.war")
+}
+
+task undeploy(type: Delete) {
+    doFirst {
+        if (!tomcatHome) {
+            throw new InvalidUserDataException("Tomcat home (CATALINA_HOME) not set")
+        }
+    }
+    delete "${tomcatHome}/webapps/${deploymentName}.war"
+
+    logger.quiet("{} undeployed in Tomcat", "${deploymentName}.war")
+}

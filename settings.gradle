@@ -1,3 +1,4 @@
 rootProject.name = 'vbim2101 - Lakashirdetesek'
 include 'backend'
 include 'desktop'
+include 'vbim2101-web'
