@@ -8,7 +8,7 @@ dependencies {
     implementation project(':backend')
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     runtimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
 }
 
 group 'org.example'
