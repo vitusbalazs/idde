@@ -8,7 +8,7 @@ public class Advertisement extends BaseEntity {
     private Integer rooms;
 
     public Advertisement() {
-
+        super();
     }
 
     public Advertisement(String title, String address, Integer price, Integer surfaceArea, Integer rooms) {

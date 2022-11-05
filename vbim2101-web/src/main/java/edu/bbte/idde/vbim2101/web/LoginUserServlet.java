@@ -1,0 +1,42 @@
+package edu.bbte.idde.vbim2101.web;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Objects;
+
+@WebServlet("/loginUser")
+public class LoginUserServlet extends HttpServlet {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginUserServlet.class);
+
+    private static final String whitelistUsername = "sarolta";
+    private static final String whitelistPassword = "unicorn";
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            String username = req.getParameter("username");
+            String password = req.getParameter("password");
+
+            if (Objects.equals(username, whitelistUsername) && Objects.equals(password, whitelistPassword)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("loggedIn", "true");
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().println("You are logged in now. Please go to the list site.");
+            } else {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                resp.getWriter().println("You are not authorized to visit this website. Maybe you've misspelled your username or password.");
+            }
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().println("Something went wrong. Please try again.");
+        }
+    }
+}

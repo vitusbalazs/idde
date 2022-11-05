@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 @WebServlet("/advertisements")
@@ -67,14 +66,19 @@ public class AdvertisementsServlet extends HttpServlet {
         LOGGER.info("POST /advertisements arrived...");
         try {
             Advertisement data = objectMapper.readValue(req.getReader(), Advertisement.class);
-            advertisementsDao.createAdvertisement(data);
-
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().println("New advertisement added succesfully. Title: " + data.getTitle());
-            LOGGER.info("POST /advertisements OK");
+            if (data.getTitle() == null || data.getAddress() == null || data.getPrice() == null
+                    || data.getSurfaceArea() == null || data.getRooms() == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST)");
+            } else {
+                advertisementsDao.createAdvertisement(data);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().println("New advertisement added succesfully. Title: " + data.getTitle());
+                LOGGER.info("POST /advertisements OK");
+            }
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type.");
+            resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST)");
             LOGGER.info("POST /advertisements failed");
         }
     }
@@ -106,15 +110,20 @@ public class AdvertisementsServlet extends HttpServlet {
         try {
             Long advID = Long.parseLong(req.getParameter("id"));
             Advertisement data = objectMapper.readValue(req.getReader(), Advertisement.class);
-            advertisementsDao.createAdvertisement(data);
 
-            if (advertisementsDao.findById(advID) != null) {
-                advertisementsDao.updateAdvertisement(advID, data);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().println("PUT completed successfully!");
+            if (data.getTitle() == null || data.getAddress() == null || data.getPrice() == null
+                    || data.getSurfaceArea() == null || data.getRooms() == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (PUT)");
             } else {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
+                if (advertisementsDao.findById(advID) != null) {
+                    advertisementsDao.updateAdvertisement(advID, data);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    resp.getWriter().println("PUT completed successfully!");
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
+                }
             }
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
