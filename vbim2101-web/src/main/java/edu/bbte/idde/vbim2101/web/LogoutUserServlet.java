@@ -18,10 +18,10 @@ public class LogoutUserServlet extends HttpServlet {
             HttpSession session = req.getSession();
 
             Boolean loggedIn;
-            if (session.getAttribute("loggedIn") != null) {
-                loggedIn = Objects.equals(session.getAttribute("loggedIn").toString(), "true");
-            } else {
+            if (session.getAttribute("loggedIn") == null) {
                 loggedIn = false;
+            } else {
+                loggedIn = Objects.equals(session.getAttribute("loggedIn").toString(), "true");
             }
 
             if (loggedIn) {

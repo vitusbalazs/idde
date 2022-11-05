@@ -88,13 +88,13 @@ public class AdvertisementsServlet extends HttpServlet {
         LOGGER.info("DELETE /advertisements arrived...");
         try {
             Long advID = Long.parseLong(req.getParameter("id"));
-            if (advertisementsDao.findById(advID) != null) {
+            if (advertisementsDao.findById(advID) == null) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().println("There was no advertisement with the given ID! (DELETE)");
+            } else {
                 advertisementsDao.deleteAdvertisement(advID);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().println("DELETE completed successfully!");
-            } else {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println("There was no advertisement with the given ID! (DELETE)");
             }
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -116,13 +116,13 @@ public class AdvertisementsServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (PUT)");
             } else {
-                if (advertisementsDao.findById(advID) != null) {
+                if (advertisementsDao.findById(advID) == null) {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
+                } else {
                     advertisementsDao.updateAdvertisement(advID, data);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().println("PUT completed successfully!");
-                } else {
-                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
                 }
             }
         } catch (NumberFormatException e) {

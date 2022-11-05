@@ -47,7 +47,8 @@ public class VisualAdvertisementsServlet extends HttpServlet {
             data.put("advertisements", advertisementsDao.findAllAdvertisements());
             template.process(data, resp.getWriter());
         } catch (TemplateException e) {
-            throw new RuntimeException(e);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().println("Something went wrong. Please try again!");
         }
     }
 }

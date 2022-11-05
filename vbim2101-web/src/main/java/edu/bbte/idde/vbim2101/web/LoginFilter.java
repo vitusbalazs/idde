@@ -1,6 +1,5 @@
 package edu.bbte.idde.vbim2101.web;
 
-import freemarker.template.Template;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -18,28 +17,26 @@ import java.util.Objects;
 @WebFilter("/list")
 public class LoginFilter extends HttpFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginFilter.class);
-    private Template template;
 
     @Override
-    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException {
         LOGGER.info("[FILTER] " + req.getRequestURI());
         try {
             HttpSession session = req.getSession();
 
             Boolean loggedIn;
-            if (session.getAttribute("loggedIn") != null) {
-                loggedIn = Objects.equals(session.getAttribute("loggedIn").toString(), "true");
-            } else {
+            if (session.getAttribute("loggedIn") == null) {
                 session.setAttribute("loggedIn", "false");
                 loggedIn = false;
+            } else {
+                loggedIn = Objects.equals(session.getAttribute("loggedIn").toString(), "true");
             }
 
-            if (!loggedIn)
-            {
-                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.html");
-                dispatcher.forward(req, res);
+            if (loggedIn) {
                 chain.doFilter(req, res);
             } else {
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.html");
+                dispatcher.forward(req, res);
                 chain.doFilter(req, res);
             }
         } catch (ServletException | IOException e) {

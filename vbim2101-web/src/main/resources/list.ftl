@@ -29,7 +29,6 @@
         </ul>
         <div class="control-btn-group">
             <form method="POST" action="/vbim2101-web/logout">
-                <!-- <button type="button" class="btn btn-outline-warning">Warning</button> -->
                 <button type="submit" class="btn btn-warning">Logout</button>
             </form>
         </div>

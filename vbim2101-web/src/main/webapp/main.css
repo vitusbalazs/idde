@@ -19,7 +19,7 @@ h2 {
     height: 100vh;
 }
 
-form {
+.login-form {
     border: 1px solid gray;
     border-radius: 5px;
     width: 30%;
