@@ -24,19 +24,9 @@ public class LoginFilter extends HttpFilter {
         try {
             HttpSession session = req.getSession();
 
-            Boolean loggedIn;
-            if (session.getAttribute("loggedIn") == null) {
-                session.setAttribute("loggedIn", "false");
-                loggedIn = false;
+            if (session.getAttribute("username") == null && session.getAttribute("password") == null) {
+                res.sendRedirect("/vbim2101-web/login.html");
             } else {
-                loggedIn = Objects.equals(session.getAttribute("loggedIn").toString(), "true");
-            }
-
-            if (loggedIn) {
-                chain.doFilter(req, res);
-            } else {
-                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/login.html");
-                dispatcher.forward(req, res);
                 chain.doFilter(req, res);
             }
         } catch (ServletException | IOException e) {

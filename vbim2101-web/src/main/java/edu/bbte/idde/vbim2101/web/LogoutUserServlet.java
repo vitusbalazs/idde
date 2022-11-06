@@ -17,20 +17,13 @@ public class LogoutUserServlet extends HttpServlet {
         try {
             HttpSession session = req.getSession();
 
-            Boolean loggedIn;
-            if (session.getAttribute("loggedIn") == null) {
-                loggedIn = false;
-            } else {
-                loggedIn = Objects.equals(session.getAttribute("loggedIn").toString(), "true");
-            }
-
-            if (loggedIn) {
-                session.setAttribute("loggedIn", "false");
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().println("You've successfully logged out!");
-            } else {
+            if (session.getAttribute("username") == null && session.getAttribute("password") == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("You are not logged in");
+            } else {
+                session.removeAttribute("username");
+                session.removeAttribute("password");
+                resp.sendRedirect("/vbim2101-web/list");
             }
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

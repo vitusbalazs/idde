@@ -28,9 +28,9 @@ public class LoginUserServlet extends HttpServlet {
 
             if (Objects.equals(username, WHITELISTUSERNAME) && Objects.equals(password, WHITELISTPASSWORD)) {
                 HttpSession session = req.getSession();
-                session.setAttribute("loggedIn", "true");
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.getWriter().println("You are logged in now. Please go to the list site.");
+                session.setAttribute("username", username);
+                session.setAttribute("password", password);
+                resp.sendRedirect("/vbim2101-web/list");
             } else {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 resp.getWriter().println("You are not authorized to visit this website."
