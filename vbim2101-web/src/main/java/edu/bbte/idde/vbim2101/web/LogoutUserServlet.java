@@ -20,8 +20,7 @@ public class LogoutUserServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("You are not logged in");
             } else {
-                session.removeAttribute("username");
-                session.removeAttribute("password");
+                session.invalidate();
                 resp.sendRedirect("/vbim2101-web/list");
             }
         } catch (IOException e) {
