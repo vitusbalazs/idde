@@ -2,7 +2,8 @@ package edu.bbte.idde.vbim2101.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.memory.AdvertisementMemoryDao;
+import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.memory.MemAdvertisementDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,13 +18,14 @@ import java.io.IOException;
 @WebServlet("/advertisements")
 public class AdvertisementsServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdvertisementsServlet.class);
+    private static final DaoFactory daoFactory = DaoFactory.getInstance();
     private AdvertisementsDao advertisementsDao;
     private ObjectMapper objectMapper;
 
     @Override
     public void init() throws ServletException {
         LOGGER.info("/advertisements endpoint initializing...");
-        advertisementsDao = new AdvertisementMemoryDao();
+        advertisementsDao = daoFactory.getAdvertisementDao();
         objectMapper = ObjectMapperFactory.getObjectMapper();
         LOGGER.info("/advertisements endpoint initialization completed");
     }

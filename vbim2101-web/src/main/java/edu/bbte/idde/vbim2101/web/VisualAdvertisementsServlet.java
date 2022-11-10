@@ -1,7 +1,8 @@
 package edu.bbte.idde.vbim2101.web;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.memory.AdvertisementMemoryDao;
+import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.memory.MemAdvertisementDao;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebServlet("/list")
 public class VisualAdvertisementsServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(VisualAdvertisementsServlet.class);
+    private static final DaoFactory daoFactory = DaoFactory.getInstance();
     private AdvertisementsDao advertisementsDao;
     private Template template;
 
@@ -27,7 +29,7 @@ public class VisualAdvertisementsServlet extends HttpServlet {
     public void init() throws ServletException {
         LOGGER.info("/list endpoint initializing...");
         super.init();
-        advertisementsDao = new AdvertisementMemoryDao();
+        advertisementsDao = daoFactory.getAdvertisementDao();
 
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
         cfg.setDefaultEncoding("UTF-8");
