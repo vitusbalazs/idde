@@ -17,21 +17,21 @@ public class Main {
 
         AdvertisementsDao adDao = daoFactory.getAdvertisementDao();
 
-//        Advertisement ad1 = new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1);
-//        adDao.createAdvertisement(ad1);
-//        LOG.info(ad1.toString());
-//        Advertisement toUpdate = new Advertisement("Elado monostori lakas", "Portile de fier 4", 160000, 60, 1);
-//        adDao.updateAdvertisement(ad1.getId(), toUpdate);
-//        LOG.info(ad1.toString());
-//
-//        Advertisement ad2 = new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3);
-//        adDao.createAdvertisement(ad2);
-//        LOG.info("Meg egy: {}", ad2);
-//
-//        adDao.deleteAdvertisement(ad1.getId());
-//
-//        ad1 = new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4);
-//        adDao.createAdvertisement(ad1);
+        /*Advertisement ad1 = new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1);
+        adDao.createAdvertisement(ad1);
+        LOG.info(ad1.toString());
+        Advertisement toUpdate = new Advertisement("Elado monostori lakas", "Portile de fier 4", 160000, 60, 1);
+        adDao.updateAdvertisement(ad1.getId(), toUpdate);
+        LOG.info(ad1.toString());
+
+        Advertisement ad2 = new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3);
+        adDao.createAdvertisement(ad2);
+        LOG.info("Meg egy: {}", ad2);
+
+        adDao.deleteAdvertisement(ad1.getId());
+
+        ad1 = new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4);
+        adDao.createAdvertisement(ad1);*/
 
         LOG.info("-----------------------------");
         Collection<Advertisement> lista = adDao.findAllAdvertisements();

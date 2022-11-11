@@ -9,11 +9,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class jdbcAdvertisementDao implements AdvertisementsDao {
+public class JdbcAdvertisementDao implements AdvertisementsDao {
     private Connection connection;
-    private static final Logger LOGGER = LoggerFactory.getLogger(jdbcAdvertisementDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAdvertisementDao.class);
 
-    public jdbcAdvertisementDao() {
+    public JdbcAdvertisementDao() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -59,7 +59,8 @@ public class jdbcAdvertisementDao implements AdvertisementsDao {
     public Advertisement findById(Long id) {
         //String query = "SELECT * FROM Book WHERE Id = ?";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements WHERE id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements"
+                    + "WHERE id=?");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -83,7 +84,8 @@ public class jdbcAdvertisementDao implements AdvertisementsDao {
     @Override
     public void createAdvertisement(Advertisement entity) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements VALUES (default, ?, ?, ?, ?, ?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements"
+                    + "VALUES (default, ?, ?, ?, ?, ?)");
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getAddress());
             preparedStatement.setInt(3, entity.getPrice());
@@ -99,8 +101,8 @@ public class jdbcAdvertisementDao implements AdvertisementsDao {
     @Override
     public void updateAdvertisement(Long id, Advertisement entity) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements SET title=?, address=?, "
-                    + "price=?, surfaceArea=?, rooms=? WHERE id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements"
+                    + "SET title=?, address=?, price=?, surfaceArea=?, rooms=? WHERE id=?");
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getAddress());
             preparedStatement.setInt(3, entity.getPrice());
@@ -110,7 +112,7 @@ public class jdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.executeUpdate();
             LOGGER.info("[SQL] Update successful");
         } catch (SQLException e) {
-            LOGGER.error("[SQL] Create failed... " , e);
+            LOGGER.error("[SQL] Create failed... ", e);
         }
     }
 

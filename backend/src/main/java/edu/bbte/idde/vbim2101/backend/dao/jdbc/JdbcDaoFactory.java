@@ -3,12 +3,13 @@ package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
 
-public class jdbcDaoFactory extends DaoFactory {
-    private static jdbcAdvertisementDao dao;
+public class JdbcDaoFactory extends DaoFactory {
+    private static JdbcAdvertisementDao dao;
+
     @Override
     public AdvertisementsDao getAdvertisementDao() {
         if (dao == null) {
-            dao = new jdbcAdvertisementDao();
+            dao = new JdbcAdvertisementDao();
         }
         return dao;
     }

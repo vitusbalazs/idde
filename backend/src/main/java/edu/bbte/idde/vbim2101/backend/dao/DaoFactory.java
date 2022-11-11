@@ -2,7 +2,7 @@ package edu.bbte.idde.vbim2101.backend.dao;
 
 import edu.bbte.idde.vbim2101.backend.config.Config;
 import edu.bbte.idde.vbim2101.backend.config.ConfigFactory;
-import edu.bbte.idde.vbim2101.backend.dao.jdbc.jdbcDaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.jdbc.JdbcDaoFactory;
 import edu.bbte.idde.vbim2101.backend.dao.memory.MemDaoFactory;
 
 import java.util.Objects;
@@ -17,7 +17,7 @@ public abstract class DaoFactory {
             Config config = ConfigFactory.getConfig();
 
             if (Objects.equals(config.getDaoType(), "jdbc")) {
-                instance = new jdbcDaoFactory();
+                instance = new JdbcDaoFactory();
             } else {
                 instance = new MemDaoFactory();
             }

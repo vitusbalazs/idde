@@ -3,7 +3,6 @@ package edu.bbte.idde.vbim2101.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
-import edu.bbte.idde.vbim2101.backend.dao.memory.MemAdvertisementDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,14 +17,14 @@ import java.io.IOException;
 @WebServlet("/advertisements")
 public class AdvertisementsServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdvertisementsServlet.class);
-    private static final DaoFactory daoFactory = DaoFactory.getInstance();
-    private AdvertisementsDao advertisementsDao;
+    private static final DaoFactory DAOFACTORY = DaoFactory.getInstance();
+    private AdvertisementsDao AdvertisementsDao;
     private ObjectMapper objectMapper;
 
     @Override
     public void init() throws ServletException {
         LOGGER.info("/advertisements endpoint initializing...");
-        advertisementsDao = daoFactory.getAdvertisementDao();
+        AdvertisementsDao = DAOFACTORY.getAdvertisementDao();
         objectMapper = ObjectMapperFactory.getObjectMapper();
         LOGGER.info("/advertisements endpoint initialization completed");
     }
@@ -37,11 +36,11 @@ public class AdvertisementsServlet extends HttpServlet {
         try {
             String advID = req.getParameter("id");
             if (advID == null) {
-                objectMapper.writeValue(resp.getOutputStream(), advertisementsDao.findAllAdvertisements());
+                objectMapper.writeValue(resp.getOutputStream(), AdvertisementsDao.findAllAdvertisements());
             } else {
                 try {
                     Long id = Long.parseLong(advID);
-                    Advertisement advertisement = advertisementsDao.findById(id);
+                    Advertisement advertisement = AdvertisementsDao.findById(id);
                     if (advertisement == null) {
                         // nem talalhato
                         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -73,7 +72,7 @@ public class AdvertisementsServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST)");
             } else {
-                advertisementsDao.createAdvertisement(data);
+                AdvertisementsDao.createAdvertisement(data);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().println("New advertisement added succesfully. Title: " + data.getTitle());
                 LOGGER.info("POST /advertisements OK");
@@ -90,11 +89,11 @@ public class AdvertisementsServlet extends HttpServlet {
         LOGGER.info("DELETE /advertisements arrived...");
         try {
             Long advID = Long.parseLong(req.getParameter("id"));
-            if (advertisementsDao.findById(advID) == null) {
+            if (AdvertisementsDao.findById(advID) == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("There was no advertisement with the given ID! (DELETE)");
             } else {
-                advertisementsDao.deleteAdvertisement(advID);
+                AdvertisementsDao.deleteAdvertisement(advID);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().println("DELETE completed successfully!");
             }
@@ -118,11 +117,11 @@ public class AdvertisementsServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (PUT)");
             } else {
-                if (advertisementsDao.findById(advID) == null) {
+                if (AdvertisementsDao.findById(advID) == null) {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
                 } else {
-                    advertisementsDao.updateAdvertisement(advID, data);
+                    AdvertisementsDao.updateAdvertisement(advID, data);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().println("PUT completed successfully!");
                 }

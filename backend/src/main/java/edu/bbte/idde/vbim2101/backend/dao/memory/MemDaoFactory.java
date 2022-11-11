@@ -11,9 +11,15 @@ public class MemDaoFactory extends DaoFactory {
     public AdvertisementsDao getAdvertisementDao() {
         if (dao == null) {
             dao = new MemAdvertisementDao();
-            dao.createAdvertisement(new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1));
-            dao.createAdvertisement(new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3));
-            dao.createAdvertisement(new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4));
+            dao.createAdvertisement(
+                    new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1)
+            );
+            dao.createAdvertisement(
+                    new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3)
+            );
+            dao.createAdvertisement(
+                    new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4)
+            );
 
         }
         return dao;
