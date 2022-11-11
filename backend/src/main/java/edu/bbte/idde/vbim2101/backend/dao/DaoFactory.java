@@ -12,6 +12,8 @@ public abstract class DaoFactory {
 
     public abstract AdvertisementsDao getAdvertisementDao();
 
+    public abstract ShopsDao getShopsDao();
+
     public static synchronized DaoFactory getInstance() {
         if (instance == null) {
             Config config = ConfigFactory.getConfig();

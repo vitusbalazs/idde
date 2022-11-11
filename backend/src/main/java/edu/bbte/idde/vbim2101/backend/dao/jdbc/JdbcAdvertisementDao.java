@@ -19,7 +19,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
     }
 
     @Override
-    public Collection<Advertisement> findAllAdvertisements() {
+    public Collection<Advertisement> findAll() {
         Collection<Advertisement> advertisements = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements");
@@ -35,9 +35,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                 advertisement.setId(resultSet.getLong("id"));
                 advertisements.add(advertisement);
             }
-            LOGGER.info("[SQL] Find all successful");
+            LOGGER.info("[Advertisements - SQL] Find all successful");
         } catch (SQLException e) {
-            LOGGER.error("[SQL] Find all failed... ", e);
+            LOGGER.error("[Advertisements - SQL] Find all failed... ", e);
         }
         return advertisements;
     }
@@ -61,15 +61,15 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                 advertisement.setId(resultSet.getLong("id"));
                 return advertisement;
             }
-            LOGGER.info("[SQL] Find by id successful");
+            LOGGER.info("[Advertisements - SQL] Find by id successful");
         } catch (SQLException e) {
-            LOGGER.error("[SQL] Find by id failed... ", e);
+            LOGGER.error("[Advertisements - SQL] Find by id failed... ", e);
         }
         return null;
     }
 
     @Override
-    public void createAdvertisement(Advertisement entity) {
+    public void create(Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements"
                     + "VALUES (default, ?, ?, ?, ?, ?)");
@@ -79,14 +79,14 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setInt(4, entity.getSurfaceArea());
             preparedStatement.setInt(5, entity.getRooms());
             preparedStatement.executeUpdate();
-            LOGGER.info("[SQL] Create successful");
+            LOGGER.info("[Advertisements - SQL] Create successful");
         } catch (SQLException e) {
-            LOGGER.error("[SQL] Create failed... ", e);
+            LOGGER.error("[Advertisements - SQL] Create failed... ", e);
         }
     }
 
     @Override
-    public void updateAdvertisement(Long id, Advertisement entity) {
+    public void update(Long id, Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements"
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=? WHERE id=?");
@@ -97,21 +97,21 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setInt(5, entity.getRooms());
             preparedStatement.setLong(6, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("[SQL] Update successful");
+            LOGGER.info("[Advertisements - SQL] Update successful");
         } catch (SQLException e) {
-            LOGGER.error("[SQL] Create failed... ", e);
+            LOGGER.error("[Advertisements - SQL] Create failed... ", e);
         }
     }
 
     @Override
-    public void deleteAdvertisement(Long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Advertisements WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("[SQL] Delete successful");
+            LOGGER.info("[Advertisements - SQL] Delete successful");
         } catch (SQLException e) {
-            LOGGER.error("[SQL] Delete failed... ", e);
+            LOGGER.error("[Advertisements - SQL] Delete failed... ", e);
         }
     }
 }

@@ -2,15 +2,25 @@ package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.ShopsDao;
 
 public class JdbcDaoFactory extends DaoFactory {
-    private static JdbcAdvertisementDao dao;
+    private static JdbcAdvertisementDao advDao;
+    private static JdbcShopDao shopDao;
 
     @Override
-    public AdvertisementsDao getAdvertisementDao() {
-        if (dao == null) {
-            dao = new JdbcAdvertisementDao();
+    public synchronized AdvertisementsDao getAdvertisementDao() {
+        if (advDao == null) {
+            advDao = new JdbcAdvertisementDao();
         }
-        return dao;
+        return advDao;
+    }
+
+    @Override
+    public synchronized ShopsDao getShopsDao() {
+        if (shopDao == null) {
+            shopDao = new JdbcShopDao();
+        }
+        return shopDao;
     }
 }

@@ -15,7 +15,7 @@ public class DataSourceFactory {
             Config config = ConfigFactory.getConfig();
             HikariConfig hikariConfig = new HikariConfig();
 
-            hikariConfig.setJdbcUrl("jdbc:mysql://" + config.getUrl() + "/" + config.getDatabase());
+            hikariConfig.setJdbcUrl("jdbc:mysql://" + config.getUrl() + ":3306/" + config.getDatabase());
             hikariConfig.setUsername(config.getUsername());
             hikariConfig.setPassword(config.getPassword());
 

@@ -5,13 +5,13 @@ import edu.bbte.idde.vbim2101.backend.model.BaseEntity;
 import java.util.Collection;
 
 public interface Dao<T extends BaseEntity> {
-    Collection<T> findAllAdvertisements();
+    Collection<T> findAll();
 
     T findById(Long id);
 
-    void createAdvertisement(T entity);
+    void create(T entity);
 
-    void updateAdvertisement(Long id, T entity);
+    void update(Long id, T entity);
 
-    void deleteAdvertisement(Long id);
+    void delete(Long id);
 }

@@ -21,7 +21,7 @@ public class MemAdvertisementDao implements AdvertisementsDao {
     }
 
     @Override
-    public void createAdvertisement(Advertisement advertisement) {
+    public void create(Advertisement advertisement) {
         Long id = ID_GENERATOR.getAndIncrement();
         advertisement.setId(id);
         ENTITIES.put(id, advertisement);
@@ -29,7 +29,7 @@ public class MemAdvertisementDao implements AdvertisementsDao {
     }
 
     @Override
-    public void updateAdvertisement(Long id, Advertisement advertisement) {
+    public void update(Long id, Advertisement advertisement) {
         Advertisement toUpdate = this.findById(id);
         toUpdate.setTitle(advertisement.getTitle());
         toUpdate.setAddress(advertisement.getAddress());
@@ -40,14 +40,14 @@ public class MemAdvertisementDao implements AdvertisementsDao {
     }
 
     @Override
-    public void deleteAdvertisement(Long id) {
+    public void delete(Long id) {
         LOG.info("[DAO] Deleting advertisement.. (Title=" + ENTITIES.get(id).getTitle() + ")");
         ENTITIES.remove(id);
         LOG.info("[DAO] Delete completed");
     }
 
     @Override
-    public Collection<Advertisement> findAllAdvertisements() {
+    public Collection<Advertisement> findAll() {
         LOG.info("[DAO] Finding all advertisements..");
         return ENTITIES.values();
     }
