@@ -24,7 +24,7 @@ public class ConfigFactory {
                 config.setDaoType("mem");
             }
         }
-        LOGGER.info(config.getDaoType());
+        LOGGER.info("[CONFIG] Dao type: " + config.getDaoType());
         return config;
     }
 }

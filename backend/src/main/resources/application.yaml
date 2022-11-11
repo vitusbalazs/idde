@@ -1,1 +1,5 @@
 daoType: jdbc
+url: localhost
+database: idde_vbim2101
+username: root
+password: root
