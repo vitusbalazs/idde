@@ -7,6 +7,10 @@ public class Advertisement extends BaseEntity {
     private Integer surfaceArea;
     private Integer rooms;
 
+    public Advertisement() {
+        super();
+    }
+
     public Advertisement(String title, String address, Integer price, Integer surfaceArea, Integer rooms) {
         super();
         this.title = title;

@@ -15,6 +15,21 @@ public class AdvertisementMemoryDao implements AdvertisementsDao {
     private static final Map<Long, Advertisement> ENTITIES = new ConcurrentHashMap<>();
     private static final AtomicLong ID_GENERATOR = new AtomicLong();
 
+    static {
+        Advertisement advertisement = new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1);
+        Long id = ID_GENERATOR.getAndIncrement();
+        advertisement.setId(id);
+        ENTITIES.put(id, advertisement);
+        advertisement = new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3);
+        id = ID_GENERATOR.getAndIncrement();
+        advertisement.setId(id);
+        ENTITIES.put(id, advertisement);
+        advertisement = new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4);
+        id = ID_GENERATOR.getAndIncrement();
+        advertisement.setId(id);
+        ENTITIES.put(id, advertisement);
+    }
+
     @Override
     public Advertisement findById(Long id) {
         return ENTITIES.get(id);
