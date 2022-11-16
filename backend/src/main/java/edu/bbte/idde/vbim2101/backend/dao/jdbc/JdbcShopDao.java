@@ -2,8 +2,7 @@ package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.ShopsDao;
 import edu.bbte.idde.vbim2101.backend.model.Shop;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,9 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 public class JdbcShopDao implements ShopsDao {
     private final DataSource dataSource;
-    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAdvertisementDao.class);
 
     public JdbcShopDao() {
         dataSource = DataSourceFactory.getDataSource();
@@ -36,9 +35,9 @@ public class JdbcShopDao implements ShopsDao {
                 shop.setId(resultSet.getLong("id"));
                 shops.add(shop);
             }
-            LOGGER.info("[Shops - SQL] Find all successful");
+            log.info("[Shops - SQL] Find all successful");
         } catch (SQLException e) {
-            LOGGER.error("[Shops - SQL] Find all failed... ", e);
+            log.error("[Shops - SQL] Find all failed... ", e);
         }
         return shops;
     }
@@ -60,9 +59,9 @@ public class JdbcShopDao implements ShopsDao {
                 shop.setId(resultSet.getLong("id"));
                 return shop;
             }
-            LOGGER.info("[Shops - SQL] Find by id successful");
+            log.info("[Shops - SQL] Find by id successful");
         } catch (SQLException e) {
-            LOGGER.error("[Shops - SQL] Find by id failed... ", e);
+            log.error("[Shops - SQL] Find by id failed... ", e);
         }
         return null;
     }
@@ -76,9 +75,9 @@ public class JdbcShopDao implements ShopsDao {
             preparedStatement.setString(2, entity.getAddress());
             preparedStatement.setInt(3, entity.getRating());
             preparedStatement.executeUpdate();
-            LOGGER.info("[Shops - SQL] Create successful");
+            log.info("[Shops - SQL] Create successful");
         } catch (SQLException e) {
-            LOGGER.error("[Shops - SQL] Create failed... ", e);
+            log.error("[Shops - SQL] Create failed... ", e);
         }
     }
 
@@ -92,9 +91,9 @@ public class JdbcShopDao implements ShopsDao {
             preparedStatement.setInt(3, entity.getRating());
             preparedStatement.setLong(4, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("[Shops - SQL] Update successful");
+            log.info("[Shops - SQL] Update successful");
         } catch (SQLException e) {
-            LOGGER.error("[Shops - SQL] Create failed... ", e);
+            log.error("[Shops - SQL] Create failed... ", e);
         }
     }
 
@@ -104,9 +103,9 @@ public class JdbcShopDao implements ShopsDao {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Shops WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("[Shops - SQL] Delete successful");
+            log.info("[Shops - SQL] Delete successful");
         } catch (SQLException e) {
-            LOGGER.error("[Shops - SQL] Delete failed... ", e);
+            log.error("[Shops - SQL] Delete failed... ", e);
         }
     }
 }

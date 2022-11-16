@@ -2,16 +2,15 @@ package edu.bbte.idde.vbim2101.backend.dao.memory;
 
 import edu.bbte.idde.vbim2101.backend.dao.ShopsDao;
 import edu.bbte.idde.vbim2101.backend.model.Shop;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Slf4j
 public class MemShopsDao implements ShopsDao {
-    private static final Logger LOG = LoggerFactory.getLogger(MemShopsDao.class);
     private static final Map<Long, Shop> ENTITIES = new ConcurrentHashMap<>();
     private static final AtomicLong ID_GENERATOR = new AtomicLong();
 
@@ -25,7 +24,7 @@ public class MemShopsDao implements ShopsDao {
         Long id = ID_GENERATOR.getAndIncrement();
         shop.setId(id);
         ENTITIES.put(id, shop);
-        LOG.info("[DAO] Added new shop (Name=" + shop.getName() + ")");
+        log.info("[DAO] Added new shop (Name=" + shop.getName() + ")");
     }
 
     @Override
@@ -34,19 +33,19 @@ public class MemShopsDao implements ShopsDao {
         toUpdate.setName(shop.getName());
         toUpdate.setAddress(shop.getAddress());
         toUpdate.setRating(shop.getRating());
-        LOG.info("[DAO] Updated shop ((New)Name=" + shop.getName() + ")");
+        log.info("[DAO] Updated shop ((New)Name=" + shop.getName() + ")");
     }
 
     @Override
     public void delete(Long id) {
-        LOG.info("[DAO] Deleting shop.. (Title=" + ENTITIES.get(id).getName() + ")");
+        log.info("[DAO] Deleting shop.. (Title=" + ENTITIES.get(id).getName() + ")");
         ENTITIES.remove(id);
-        LOG.info("[DAO] Delete completed");
+        log.info("[DAO] Delete completed");
     }
 
     @Override
     public Collection<Shop> findAll() {
-        LOG.info("[DAO] Finding all advertisements..");
+        log.info("[DAO] Finding all advertisements..");
         return ENTITIES.values();
     }
 }

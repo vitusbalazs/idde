@@ -1,4 +1,4 @@
-daoType: jdbc
+daoType: mem
 url: localhost
 database: idde_vbim2101
 username: root

@@ -1,5 +1,8 @@
 package edu.bbte.idde.vbim2101.backend.model;
 
+import lombok.Data;
+
+@Data
 public class Advertisement extends BaseEntity {
     private String title;
     private String address;

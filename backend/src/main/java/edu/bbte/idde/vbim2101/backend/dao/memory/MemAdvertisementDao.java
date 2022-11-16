@@ -2,16 +2,15 @@ package edu.bbte.idde.vbim2101.backend.dao.memory;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Slf4j
 public class MemAdvertisementDao implements AdvertisementsDao {
-    private static final Logger LOG = LoggerFactory.getLogger(MemAdvertisementDao.class);
     private static final Map<Long, Advertisement> ENTITIES = new ConcurrentHashMap<>();
     private static final AtomicLong ID_GENERATOR = new AtomicLong();
 
@@ -25,7 +24,7 @@ public class MemAdvertisementDao implements AdvertisementsDao {
         Long id = ID_GENERATOR.getAndIncrement();
         advertisement.setId(id);
         ENTITIES.put(id, advertisement);
-        LOG.info("[DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
+        log.info("[DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
     }
 
     @Override
@@ -36,19 +35,19 @@ public class MemAdvertisementDao implements AdvertisementsDao {
         toUpdate.setPrice(advertisement.getPrice());
         toUpdate.setSurfaceArea(advertisement.getSurfaceArea());
         toUpdate.setRooms(advertisement.getRooms());
-        LOG.info("[DAO] Updated advertisement ((New)Title=" + advertisement.getTitle() + ")");
+        log.info("[DAO] Updated advertisement ((New)Title=" + advertisement.getTitle() + ")");
     }
 
     @Override
     public void delete(Long id) {
-        LOG.info("[DAO] Deleting advertisement.. (Title=" + ENTITIES.get(id).getTitle() + ")");
+        log.info("[DAO] Deleting advertisement.. (Title=" + ENTITIES.get(id).getTitle() + ")");
         ENTITIES.remove(id);
-        LOG.info("[DAO] Delete completed");
+        log.info("[DAO] Delete completed");
     }
 
     @Override
     public Collection<Advertisement> findAll() {
-        LOG.info("[DAO] Finding all advertisements..");
+        log.info("[DAO] Finding all advertisements..");
         return ENTITIES.values();
     }
 }

@@ -2,17 +2,16 @@ package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 public class JdbcAdvertisementDao implements AdvertisementsDao {
     private final DataSource dataSource;
-    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcAdvertisementDao.class);
 
     public JdbcAdvertisementDao() {
         dataSource = DataSourceFactory.getDataSource();
@@ -35,9 +34,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                 advertisement.setId(resultSet.getLong("id"));
                 advertisements.add(advertisement);
             }
-            LOGGER.info("[Advertisements - SQL] Find all successful");
+            log.info("[Advertisements - SQL] Find all successful");
         } catch (SQLException e) {
-            LOGGER.error("[Advertisements - SQL] Find all failed... ", e);
+            log.error("[Advertisements - SQL] Find all failed... ", e);
         }
         return advertisements;
     }
@@ -61,9 +60,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                 advertisement.setId(resultSet.getLong("id"));
                 return advertisement;
             }
-            LOGGER.info("[Advertisements - SQL] Find by id successful");
+            log.info("[Advertisements - SQL] Find by id successful");
         } catch (SQLException e) {
-            LOGGER.error("[Advertisements - SQL] Find by id failed... ", e);
+            log.error("[Advertisements - SQL] Find by id failed... ", e);
         }
         return null;
     }
@@ -79,9 +78,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setInt(4, entity.getSurfaceArea());
             preparedStatement.setInt(5, entity.getRooms());
             preparedStatement.executeUpdate();
-            LOGGER.info("[Advertisements - SQL] Create successful");
+            log.info("[Advertisements - SQL] Create successful");
         } catch (SQLException e) {
-            LOGGER.error("[Advertisements - SQL] Create failed... ", e);
+            log.error("[Advertisements - SQL] Create failed... ", e);
         }
     }
 
@@ -97,9 +96,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setInt(5, entity.getRooms());
             preparedStatement.setLong(6, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("[Advertisements - SQL] Update successful");
+            log.info("[Advertisements - SQL] Update successful");
         } catch (SQLException e) {
-            LOGGER.error("[Advertisements - SQL] Create failed... ", e);
+            log.error("[Advertisements - SQL] Create failed... ", e);
         }
     }
 
@@ -109,9 +108,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Advertisements WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("[Advertisements - SQL] Delete successful");
+            log.info("[Advertisements - SQL] Delete successful");
         } catch (SQLException e) {
-            LOGGER.error("[Advertisements - SQL] Delete failed... ", e);
+            log.error("[Advertisements - SQL] Delete failed... ", e);
         }
     }
 }
