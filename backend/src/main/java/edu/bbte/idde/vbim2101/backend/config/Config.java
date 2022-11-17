@@ -12,7 +12,7 @@ public class Config {
     private String username;
     private String password;
     private Integer poolsize;
-    private String driver;
+    private String jdbcDriver;
 
     public Config() {
         daoType = "mem";
@@ -21,6 +21,6 @@ public class Config {
         username = "";
         password = "";
         poolsize = 0;
-        driver = "";
+        jdbcDriver = "";
     }
 }

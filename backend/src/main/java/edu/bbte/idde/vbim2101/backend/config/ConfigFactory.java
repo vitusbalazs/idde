@@ -18,7 +18,7 @@ public class ConfigFactory {
             try {
                 config = objectMapper.readValue(inputStream, Config.class);
             } catch (IOException e) {
-                log.error("Getting config failed. Using 'mem' instead...");
+                log.error("[CONFIG] Getting config failed. Using 'mem' instead...");
                 config = new Config();
                 config.setDaoType("mem");
             }

@@ -7,15 +7,15 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Shop extends BaseEntity {
+public class Owner extends BaseEntity {
     private String name;
-    private String address;
-    private Integer rating; // 1-5
+    private String email;
+    private Integer age; // 1-5
 
-    public Shop(String name, String address, Integer rating) {
+    public Owner(String name, String email, Integer age) {
         super();
         this.name = name;
-        this.address = address;
-        this.rating = rating;
+        this.email = email;
+        this.age = age;
     }
 }

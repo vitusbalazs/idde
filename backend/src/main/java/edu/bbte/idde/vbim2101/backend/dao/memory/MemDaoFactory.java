@@ -3,11 +3,11 @@ package edu.bbte.idde.vbim2101.backend.dao.memory;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
-import edu.bbte.idde.vbim2101.backend.model.Shop;
+import edu.bbte.idde.vbim2101.backend.model.Owner;
 
 public class MemDaoFactory extends AbstractDaoFactory {
     private static MemAdvertisementDao advDao;
-    private static MemShopsDao shopDao;
+    private static MemOwnersDao ownerDao;
 
     @Override
     public synchronized AdvertisementsDao getAdvertisementDao() {
@@ -28,19 +28,19 @@ public class MemDaoFactory extends AbstractDaoFactory {
     }
 
     @Override
-    public synchronized MemShopsDao getShopsDao() {
-        if (shopDao == null) {
-            shopDao = new MemShopsDao();
-            shopDao.create(
-                    new Shop("Mega Image 1", "Str. Livezii 5", 5)
+    public synchronized MemOwnersDao getOwnersDao() {
+        if (ownerDao == null) {
+            ownerDao = new MemOwnersDao();
+            ownerDao.create(
+                    new Owner("Jakab-Gyik Sarolta", "jgysarolta@gmail.com", 20)
             );
-            shopDao.create(
-                    new Shop("Kaufland 1", "Str. Fabricii", 4)
+            ownerDao.create(
+                    new Owner("Vitus Balazs", "vitusbalazs01@yahoo.com", 21)
             );
-            shopDao.create(
-                    new Shop("LIDL", "Str. Morii", 2)
+            ownerDao.create(
+                    new Owner("Gyula aluGy", "alugyjol@gyula.com", 20)
             );
         }
-        return shopDao;
+        return ownerDao;
     }
 }

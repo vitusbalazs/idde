@@ -2,11 +2,11 @@ package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
-import edu.bbte.idde.vbim2101.backend.dao.ShopsDao;
+import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
 
 public class JdbcDaoFactory extends AbstractDaoFactory {
     private static JdbcAdvertisementDao advDao;
-    private static JdbcShopDao shopDao;
+    private static JdbcOwnerDao shopDao;
 
     @Override
     public synchronized AdvertisementsDao getAdvertisementDao() {
@@ -17,9 +17,9 @@ public class JdbcDaoFactory extends AbstractDaoFactory {
     }
 
     @Override
-    public synchronized ShopsDao getShopsDao() {
+    public synchronized OwnersDao getOwnersDao() {
         if (shopDao == null) {
-            shopDao = new JdbcShopDao();
+            shopDao = new JdbcOwnerDao();
         }
         return shopDao;
     }

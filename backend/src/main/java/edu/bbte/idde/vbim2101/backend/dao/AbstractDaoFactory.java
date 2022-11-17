@@ -12,7 +12,7 @@ public abstract class AbstractDaoFactory {
 
     public abstract AdvertisementsDao getAdvertisementDao();
 
-    public abstract ShopsDao getShopsDao();
+    public abstract OwnersDao getOwnersDao();
 
     public static synchronized AbstractDaoFactory getInstance() {
         if (instance == null) {
