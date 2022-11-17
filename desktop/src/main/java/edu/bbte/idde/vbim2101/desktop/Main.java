@@ -1,7 +1,7 @@
 package edu.bbte.idde.vbim2101.desktop;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.dao.ShopsDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import edu.bbte.idde.vbim2101.backend.model.Shop;
@@ -14,7 +14,7 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        DaoFactory daoFactory = DaoFactory.getInstance();
+        AbstractDaoFactory abstractDaoFactory = AbstractDaoFactory.getInstance();
 
         /*Advertisement ad1 = new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1);
         adDao.createAdvertisement(ad1);
@@ -33,14 +33,14 @@ public class Main {
         adDao.createAdvertisement(ad1);*/
 
         LOG.info("-------------- Advertisements --------------");
-        AdvertisementsDao adDao = daoFactory.getAdvertisementDao();
+        AdvertisementsDao adDao = abstractDaoFactory.getAdvertisementDao();
         Collection<Advertisement> lista = adDao.findAll();
         for (Advertisement i : lista) {
             LOG.info("{}: {}", i.getId(), i);
         }
 
         LOG.info("-------------- Shops --------------");
-        ShopsDao shopsDao = daoFactory.getShopsDao();
+        ShopsDao shopsDao = abstractDaoFactory.getShopsDao();
         Collection<Shop> lista2 = shopsDao.findAll();
         for (Shop i : lista2) {
             LOG.info("{}: {}", i.getId(), i);

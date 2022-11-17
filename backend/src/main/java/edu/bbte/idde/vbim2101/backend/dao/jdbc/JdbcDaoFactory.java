@@ -1,10 +1,10 @@
 package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.dao.ShopsDao;
 
-public class JdbcDaoFactory extends DaoFactory {
+public class JdbcDaoFactory extends AbstractDaoFactory {
     private static JdbcAdvertisementDao advDao;
     private static JdbcShopDao shopDao;
 

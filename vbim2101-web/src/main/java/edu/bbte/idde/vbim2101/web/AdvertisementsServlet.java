@@ -2,7 +2,7 @@ package edu.bbte.idde.vbim2101.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @WebServlet("/advertisements")
 public class AdvertisementsServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdvertisementsServlet.class);
-    private static final DaoFactory DAOFACTORY = DaoFactory.getInstance();
+    private static final AbstractDaoFactory DAOFACTORY = AbstractDaoFactory.getInstance();
     private AdvertisementsDao advertisementsDao;
     private ObjectMapper objectMapper;
 

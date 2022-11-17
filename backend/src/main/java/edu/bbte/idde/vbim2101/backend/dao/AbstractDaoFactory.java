@@ -7,14 +7,14 @@ import edu.bbte.idde.vbim2101.backend.dao.memory.MemDaoFactory;
 
 import java.util.Objects;
 
-public abstract class DaoFactory {
-    private static DaoFactory instance;
+public abstract class AbstractDaoFactory {
+    private static AbstractDaoFactory instance;
 
     public abstract AdvertisementsDao getAdvertisementDao();
 
     public abstract ShopsDao getShopsDao();
 
-    public static synchronized DaoFactory getInstance() {
+    public static synchronized AbstractDaoFactory getInstance() {
         if (instance == null) {
             Config config = ConfigFactory.getConfig();
 

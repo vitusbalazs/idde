@@ -1,7 +1,7 @@
 package edu.bbte.idde.vbim2101.web;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebServlet("/list")
 public class VisualAdvertisementsServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(VisualAdvertisementsServlet.class);
-    private static final DaoFactory DAOFACTORY = DaoFactory.getInstance();
+    private static final AbstractDaoFactory DAOFACTORY = AbstractDaoFactory.getInstance();
     private AdvertisementsDao advertisementsDao;
     private Template template;
 

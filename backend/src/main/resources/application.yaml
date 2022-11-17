@@ -1,5 +1,7 @@
-daoType: mem
+daoType: jdbc
 url: localhost
 database: idde_vbim2101
 username: root
 password: root
+poolsize: 10
+jdbcDriver: com.mysql.cj.jdbc.Driver

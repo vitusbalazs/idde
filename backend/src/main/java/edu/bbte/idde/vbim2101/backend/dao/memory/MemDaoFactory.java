@@ -1,11 +1,11 @@
 package edu.bbte.idde.vbim2101.backend.dao.memory;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.DaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import edu.bbte.idde.vbim2101.backend.model.Shop;
 
-public class MemDaoFactory extends DaoFactory {
+public class MemDaoFactory extends AbstractDaoFactory {
     private static MemAdvertisementDao advDao;
     private static MemShopsDao shopDao;
 
