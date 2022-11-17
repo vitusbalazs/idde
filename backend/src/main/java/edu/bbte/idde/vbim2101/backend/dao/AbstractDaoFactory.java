@@ -4,9 +4,11 @@ import edu.bbte.idde.vbim2101.backend.config.Config;
 import edu.bbte.idde.vbim2101.backend.config.ConfigFactory;
 import edu.bbte.idde.vbim2101.backend.dao.jdbc.JdbcDaoFactory;
 import edu.bbte.idde.vbim2101.backend.dao.memory.MemDaoFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
+@Slf4j
 public abstract class AbstractDaoFactory {
     private static AbstractDaoFactory instance;
 
@@ -18,10 +20,24 @@ public abstract class AbstractDaoFactory {
         if (instance == null) {
             Config config = ConfigFactory.getConfig();
 
-            if (Objects.equals(config.getDaoType(), "jdbc")) {
-                instance = new JdbcDaoFactory();
+            String daoType = System.getenv("daoType");
+            log.info(daoType);
+            if (daoType == null) {
+                if (Objects.equals(config.getDaoType(), "jdbc")) {
+                    log.info("yaml jdbc");
+                    instance = new JdbcDaoFactory();
+                } else {
+                    log.info("yaml mem");
+                    instance = new MemDaoFactory();
+                }
             } else {
-                instance = new MemDaoFactory();
+                if (Objects.equals(daoType, "jdbc")) {
+                    log.info("env jdbc");
+                    instance = new JdbcDaoFactory();
+                } else {
+                    log.info("env mem");
+                    instance = new MemDaoFactory();
+                }
             }
         }
         return instance;

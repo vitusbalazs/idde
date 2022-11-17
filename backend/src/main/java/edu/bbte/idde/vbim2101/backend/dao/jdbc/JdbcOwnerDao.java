@@ -107,4 +107,27 @@ public class JdbcOwnerDao implements OwnersDao {
             log.error("[Owners - SQL] Delete failed... ", e);
         }
     }
+
+    @Override
+    public Collection<Owner> findByAge(Integer age) {
+        Collection<Owner> owners = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners WHERE age=?");
+            preparedStatement.setInt(1, age);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Owner owner = new Owner(
+                        resultSet.getString("name"),
+                        resultSet.getString("email"),
+                        resultSet.getInt("age")
+                );
+                owner.setId(resultSet.getLong("id"));
+                owners.add(owner);
+            }
+            log.info("[Owners - SQL] Find by age successful");
+        } catch (SQLException e) {
+            log.error("[Owners - SQL] Find by age failed... ", e);
+        }
+        return owners;
+    }
 }

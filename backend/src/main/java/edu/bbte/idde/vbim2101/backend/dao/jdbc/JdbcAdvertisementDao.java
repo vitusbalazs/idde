@@ -29,7 +29,8 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                         resultSet.getString("address"),
                         resultSet.getInt("price"),
                         resultSet.getInt("surfaceArea"),
-                        resultSet.getInt("rooms")
+                        resultSet.getInt("rooms"),
+                        resultSet.getLong("owner")
                 );
                 advertisement.setId(resultSet.getLong("id"));
                 advertisements.add(advertisement);
@@ -55,7 +56,8 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                         resultSet.getString("address"),
                         resultSet.getInt("price"),
                         resultSet.getInt("surfaceArea"),
-                        resultSet.getInt("rooms")
+                        resultSet.getInt("rooms"),
+                        resultSet.getLong("owner")
                 );
                 advertisement.setId(resultSet.getLong("id"));
                 return advertisement;
@@ -112,5 +114,33 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Delete failed... ", e);
         }
+    }
+
+    @Override
+    public Collection<Advertisement> findByAge(Integer age) {
+        Collection<Advertisement> advertisements = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements"
+                    + " JOIN Owners ON Owners.id = Advertisements.owner"
+                    + " WHERE Owners.age = ?");
+            preparedStatement.setInt(1, age);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Advertisement advertisement = new Advertisement(
+                        resultSet.getString("title"),
+                        resultSet.getString("address"),
+                        resultSet.getInt("price"),
+                        resultSet.getInt("surfaceArea"),
+                        resultSet.getInt("rooms"),
+                        resultSet.getLong("owner")
+                );
+                advertisement.setId(resultSet.getLong("id"));
+                advertisements.add(advertisement);
+            }
+            log.info("[Advertisements - SQL] Find by age successful");
+        } catch (SQLException e) {
+            log.error("[Advertisements - SQL] Find by age failed... ", e);
+        }
+        return advertisements;
     }
 }
