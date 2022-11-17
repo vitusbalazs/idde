@@ -126,7 +126,7 @@ public class AdvertisementsServlet extends HttpServlet {
                     resp.getWriter().println("PUT completed successfully!");
                 }
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().println("Something went wrong with your PUT request on /advertisements endpoint.");
             LOGGER.info("PUT /advertisements failed");

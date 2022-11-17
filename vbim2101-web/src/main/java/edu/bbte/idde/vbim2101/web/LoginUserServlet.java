@@ -33,8 +33,7 @@ public class LoginUserServlet extends HttpServlet {
                 resp.sendRedirect("/vbim2101-web/list");
             } else {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                resp.getWriter().println("You are not authorized to visit this website."
-                        + "Maybe you've misspelled your username or password.");
+                resp.sendRedirect("/vbim2101-web/login");
             }
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
