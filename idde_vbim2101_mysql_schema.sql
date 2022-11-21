@@ -4,7 +4,7 @@ USE idde_vbim2101;
 DROP TABLE IF EXISTS Advertisements;
 DROP TABLE IF EXISTS Owners;
 
-CREATE TABLE IF NOT EXISTS Owners  (
+CREATE TABLE IF NOT EXISTS Owners (
 	ID INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     email VARCHAR(200),
@@ -37,6 +37,6 @@ SELECT * FROM Owners;
 
 -- DELETE FROM Advertisements WHERE ID IN (4,5,6);
 
-SELECT * FROM Advertisements 
-JOIN Owners ON Owners.id = Advertisements.owner
-WHERE Owners.age = 21
+-- SELECT * FROM Advertisements 
+-- JOIN Owners ON Owners.id = Advertisements.owner
+-- WHERE Owners.age = 21
