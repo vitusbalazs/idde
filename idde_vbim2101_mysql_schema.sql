@@ -33,6 +33,8 @@ INSERT INTO Advertisements VALUES(default, "Lakas3 elado", "Cim3", 70, 60, 50, 1
 SELECT * FROM Advertisements;
 SELECT * FROM Owners;
 
+INSERT INTO Advertisements VALUES (default, "m", "n", 1, 2, 3, 1);
+
 -- UPDATE Advertisements SET surfaceArea = 100, rooms = 2 WHERE ID = 1;
 
 -- DELETE FROM Advertisements WHERE ID IN (4,5,6);

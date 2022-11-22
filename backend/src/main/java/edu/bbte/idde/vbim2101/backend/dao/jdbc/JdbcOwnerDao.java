@@ -45,7 +45,7 @@ public class JdbcOwnerDao implements OwnersDao {
     @Override
     public Owner findById(Long id) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners"
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners "
                     + "WHERE id=?");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -68,7 +68,7 @@ public class JdbcOwnerDao implements OwnersDao {
     @Override
     public void create(Owner entity) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Owners"
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Owners "
                     + "VALUES (default, ?, ?, ?)");
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getEmail());
@@ -83,7 +83,7 @@ public class JdbcOwnerDao implements OwnersDao {
     @Override
     public void update(Long id, Owner entity) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Owners"
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Owners "
                     + "SET name=?, address=?, rating=? WHERE id=?");
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getEmail());

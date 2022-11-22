@@ -16,17 +16,18 @@ public class Main {
     public static void main(String[] args) {
         AbstractDaoFactory abstractDaoFactory = AbstractDaoFactory.getInstance();
 
-        LOG.info("-------------- Advertisements --------------");
-        AdvertisementsDao adDao = abstractDaoFactory.getAdvertisementDao();
-        Collection<Advertisement> lista = adDao.findAll();
-        for (Advertisement i : lista) {
-            LOG.info("{}: {}", i.getId(), i);
-        }
-
         LOG.info("-------------- Owners --------------");
         OwnersDao ownersDao = abstractDaoFactory.getOwnersDao();
         Collection<Owner> lista2 = ownersDao.findAll();
         for (Owner i : lista2) {
+            LOG.info("{}: {}", i.getId(), i);
+        }
+
+        LOG.info("-------------- Advertisements --------------");
+        AdvertisementsDao adDao = abstractDaoFactory.getAdvertisementDao();
+        adDao.create(new Advertisement("monostori elado", "monostor", 15, 1, 2, 1L));
+        Collection<Advertisement> lista = adDao.findAll();
+        for (Advertisement i : lista) {
             LOG.info("{}: {}", i.getId(), i);
         }
     }

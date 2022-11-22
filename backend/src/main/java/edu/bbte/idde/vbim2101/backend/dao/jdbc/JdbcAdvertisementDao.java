@@ -46,7 +46,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
     public Advertisement findById(Long id) {
         //String query = "SELECT * FROM Book WHERE Id = ?";
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements"
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements "
                     + "WHERE id=?");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -72,13 +72,14 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
     @Override
     public void create(Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements"
-                    + "VALUES (default, ?, ?, ?, ?, ?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
+                    + "VALUES (default, ?, ?, ?, ?, ?, ?)");
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getAddress());
             preparedStatement.setInt(3, entity.getPrice());
             preparedStatement.setInt(4, entity.getSurfaceArea());
             preparedStatement.setInt(5, entity.getRooms());
+            preparedStatement.setLong(6, entity.getOwner());
             preparedStatement.executeUpdate();
             log.info("[Advertisements - SQL] Create successful");
         } catch (SQLException e) {
@@ -89,14 +90,15 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
     @Override
     public void update(Long id, Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements"
-                    + "SET title=?, address=?, price=?, surfaceArea=?, rooms=? WHERE id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
+                    + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
             preparedStatement.setString(1, entity.getTitle());
             preparedStatement.setString(2, entity.getAddress());
             preparedStatement.setInt(3, entity.getPrice());
             preparedStatement.setInt(4, entity.getSurfaceArea());
             preparedStatement.setInt(5, entity.getRooms());
-            preparedStatement.setLong(6, id);
+            preparedStatement.setLong(6, entity.getOwner());
+            preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
             log.info("[Advertisements - SQL] Update successful");
         } catch (SQLException e) {
