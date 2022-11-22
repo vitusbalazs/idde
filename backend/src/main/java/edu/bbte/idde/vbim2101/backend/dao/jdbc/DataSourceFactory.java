@@ -4,13 +4,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import edu.bbte.idde.vbim2101.backend.config.Config;
 import edu.bbte.idde.vbim2101.backend.config.ConfigFactory;
-import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Slf4j
