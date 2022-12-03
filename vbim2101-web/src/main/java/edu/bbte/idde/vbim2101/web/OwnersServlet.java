@@ -78,7 +78,7 @@ public class OwnersServlet extends HttpServlet {
             }
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST)");
+            resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST): " + e);
             LOGGER.info("POST /owners failed");
         }
     }
