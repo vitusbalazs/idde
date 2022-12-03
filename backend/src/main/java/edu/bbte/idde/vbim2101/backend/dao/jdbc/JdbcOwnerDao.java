@@ -1,7 +1,6 @@
 package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
-import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import edu.bbte.idde.vbim2101.backend.model.Owner;
 import lombok.extern.slf4j.Slf4j;
 

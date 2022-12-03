@@ -1,8 +1,6 @@
 package edu.bbte.idde.vbim2101.backend.dao.memory;
 
-import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,13 +56,11 @@ public class MemAdvertisementDao implements AdvertisementsDao {
     }
 
     @Override
-    public Collection<Advertisement> findByAge(Integer age) {
-        log.info("[MemAdvertisement - DAO] Finding all advertisements by age of owner...");
-        AbstractDaoFactory abstractDaoFactory = AbstractDaoFactory.getInstance();
-        OwnersDao ownersDao = abstractDaoFactory.getOwnersDao();
+    public Collection<Advertisement> findByRooms(Integer rooms) {
+        log.info("[MemAdvertisement - DAO] Finding all advertisements by rooms number...");
         Collection<Advertisement> advertisements = new ArrayList<>();
-        for (Advertisement i:ENTITIES.values()) {
-            if (Objects.equals(ownersDao.findById(i.getOwner()).getAge(), age)) {
+        for (Advertisement i : ENTITIES.values()) {
+            if (Objects.equals(i.getRooms(), rooms)) {
                 advertisements.add(i);
             }
         }

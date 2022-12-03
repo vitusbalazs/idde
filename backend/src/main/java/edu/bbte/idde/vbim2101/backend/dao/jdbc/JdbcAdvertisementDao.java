@@ -118,21 +118,20 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
     }
 
     @Override
-    public Collection<Advertisement> findByAge(Integer age) {
+    public Collection<Advertisement> findByRooms(Integer rooms) {
         Collection<Advertisement> advertisements = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements"
-                    + " JOIN Owners ON Owners.id = Advertisements.owner"
-                    + " WHERE Owners.age = ?");
-            preparedStatement.setInt(1, age);
+                    + " WHERE rooms = ?");
+            preparedStatement.setInt(1, rooms);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Advertisement advertisement = createAdvertisementFromResultSet(resultSet);
                 advertisements.add(advertisement);
             }
-            log.info("[Advertisements - SQL] Find by age successful");
+            log.info("[Advertisements - SQL] Find by rooms successful");
         } catch (SQLException e) {
-            log.error("[Advertisements - SQL] Find by age failed... ", e);
+            log.error("[Advertisements - SQL] Find by rooms failed... ", e);
         }
         return advertisements;
     }

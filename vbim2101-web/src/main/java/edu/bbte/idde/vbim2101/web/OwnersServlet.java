@@ -1,10 +1,8 @@
 package edu.bbte.idde.vbim2101.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
 import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
-import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import edu.bbte.idde.vbim2101.backend.model.Owner;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

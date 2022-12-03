@@ -14,6 +14,4 @@ public interface Dao<T extends BaseEntity> {
     void update(Long id, T entity);
 
     void delete(Long id);
-
-    Collection<T> findByAge(Integer age);
 }
