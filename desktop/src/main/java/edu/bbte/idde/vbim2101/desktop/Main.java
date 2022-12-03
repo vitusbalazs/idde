@@ -1,8 +1,10 @@
 package edu.bbte.idde.vbim2101.desktop;
 
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
-import edu.bbte.idde.vbim2101.backend.dao.memory.AdvertisementMemoryDao;
+import edu.bbte.idde.vbim2101.backend.dao.AbstractDaoFactory;
+import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
+import edu.bbte.idde.vbim2101.backend.model.Owner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,26 +14,19 @@ public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        AdvertisementsDao adDao = new AdvertisementMemoryDao();
+        AbstractDaoFactory abstractDaoFactory = AbstractDaoFactory.getInstance();
 
-        Advertisement ad1 = new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1);
-        adDao.createAdvertisement(ad1);
-        LOG.info(ad1.toString());
-        Advertisement toUpdate = new Advertisement("Elado monostori lakas", "Portile de fier 4", 160000, 60, 1);
-        adDao.updateAdvertisement(ad1.getId(), toUpdate);
-        LOG.info(ad1.toString());
+        LOG.info("-------------- Owners --------------");
+        OwnersDao ownersDao = abstractDaoFactory.getOwnersDao();
+        Collection<Owner> lista2 = ownersDao.findAll();
+        for (Owner i : lista2) {
+            LOG.info("{}: {}", i.getId(), i);
+        }
 
-        Advertisement ad2 = new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3);
-        adDao.createAdvertisement(ad2);
-        LOG.info("Meg egy: {}", ad2);
-
-        adDao.deleteAdvertisement(ad1.getId());
-
-        ad1 = new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4);
-        adDao.createAdvertisement(ad1);
-
-        LOG.info("-----------------------------");
-        Collection<Advertisement> lista = adDao.findAllAdvertisements();
+        LOG.info("-------------- Advertisements --------------");
+        AdvertisementsDao adDao = abstractDaoFactory.getAdvertisementDao();
+        adDao.create(new Advertisement("monostori elado", "monostor", 15, 1, 2, 1L));
+        Collection<Advertisement> lista = adDao.findAll();
         for (Advertisement i : lista) {
             LOG.info("{}: {}", i.getId(), i);
         }
