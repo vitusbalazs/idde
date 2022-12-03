@@ -1,6 +1,7 @@
 package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
+import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import edu.bbte.idde.vbim2101.backend.model.Owner;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +21,25 @@ public class JdbcOwnerDao implements OwnersDao {
         dataSource = DataSourceFactory.getDataSource();
     }
 
+    // Creates Advertisement object from resultSet
+    private Owner createOwnerFromResultSet(ResultSet resultSet) throws SQLException {
+        Owner owner = new Owner(
+                resultSet.getString("name"),
+                resultSet.getString("email"),
+                resultSet.getInt("age")
+        );
+        owner.setId(resultSet.getLong("id"));
+        return owner;
+    }
+
+    // Sets the parameters of a preparedStatement from an Advertisement object
+    // It doesn't set the id
+    private void setParameters(Owner owner, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, owner.getName());
+        preparedStatement.setString(2, owner.getEmail());
+        preparedStatement.setInt(3, owner.getAge());
+    }
+
     @Override
     public Collection<Owner> findAll() {
         Collection<Owner> owners = new ArrayList<>();
@@ -27,12 +47,7 @@ public class JdbcOwnerDao implements OwnersDao {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Owner owner = new Owner(
-                        resultSet.getString("name"),
-                        resultSet.getString("email"),
-                        resultSet.getInt("age")
-                );
-                owner.setId(resultSet.getLong("id"));
+                Owner owner = createOwnerFromResultSet(resultSet);
                 owners.add(owner);
             }
             log.info("[Owners - SQL] Find all successful");
@@ -50,13 +65,7 @@ public class JdbcOwnerDao implements OwnersDao {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Owner owner = new Owner(
-                        resultSet.getString("name"),
-                        resultSet.getString("email"),
-                        resultSet.getInt("age")
-                );
-                owner.setId(resultSet.getLong("id"));
-                return owner;
+                return createOwnerFromResultSet(resultSet);
             }
             log.info("[Owners - SQL] Find by id successful");
         } catch (SQLException e) {
@@ -70,9 +79,7 @@ public class JdbcOwnerDao implements OwnersDao {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Owners "
                     + "VALUES (default, ?, ?, ?)");
-            preparedStatement.setString(1, entity.getName());
-            preparedStatement.setString(2, entity.getEmail());
-            preparedStatement.setInt(3, entity.getAge());
+            setParameters(entity, preparedStatement);
             preparedStatement.executeUpdate();
             log.info("[Owners - SQL] Create successful");
         } catch (SQLException e) {
@@ -85,9 +92,7 @@ public class JdbcOwnerDao implements OwnersDao {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Owners "
                     + "SET name=?, address=?, rating=? WHERE id=?");
-            preparedStatement.setString(1, entity.getName());
-            preparedStatement.setString(2, entity.getEmail());
-            preparedStatement.setInt(3, entity.getAge());
+            setParameters(entity, preparedStatement);
             preparedStatement.setLong(4, id);
             preparedStatement.executeUpdate();
             log.info("[Owners - SQL] Update successful");
@@ -116,12 +121,7 @@ public class JdbcOwnerDao implements OwnersDao {
             preparedStatement.setInt(1, age);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Owner owner = new Owner(
-                        resultSet.getString("name"),
-                        resultSet.getString("email"),
-                        resultSet.getInt("age")
-                );
-                owner.setId(resultSet.getLong("id"));
+                Owner owner = createOwnerFromResultSet(resultSet);
                 owners.add(owner);
             }
             log.info("[Owners - SQL] Find by age successful");

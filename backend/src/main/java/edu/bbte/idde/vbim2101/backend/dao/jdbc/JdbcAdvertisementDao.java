@@ -17,6 +17,32 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
         dataSource = DataSourceFactory.getDataSource();
     }
 
+    // Creates Advertisement object from resultSet
+    private Advertisement createAdvertisementFromResultSet(ResultSet resultSet) throws SQLException {
+        Advertisement advertisement;
+        advertisement = new Advertisement(
+                resultSet.getString("title"),
+                resultSet.getString("address"),
+                resultSet.getInt("price"),
+                resultSet.getInt("surfaceArea"),
+                resultSet.getInt("rooms"),
+                resultSet.getLong("owner")
+        );
+        advertisement.setId(resultSet.getLong("id"));
+        return advertisement;
+    }
+
+    // Sets the parameters of a preparedStatement from an Advertisement object
+    // It doesn't set the id
+    private void setParameters(Advertisement advertisement, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, advertisement.getTitle());
+        preparedStatement.setString(2, advertisement.getAddress());
+        preparedStatement.setInt(3, advertisement.getPrice());
+        preparedStatement.setInt(4, advertisement.getSurfaceArea());
+        preparedStatement.setInt(5, advertisement.getRooms());
+        preparedStatement.setLong(6, advertisement.getOwner());
+    }
+
     @Override
     public Collection<Advertisement> findAll() {
         Collection<Advertisement> advertisements = new ArrayList<>();
@@ -24,15 +50,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Advertisement advertisement = new Advertisement(
-                        resultSet.getString("title"),
-                        resultSet.getString("address"),
-                        resultSet.getInt("price"),
-                        resultSet.getInt("surfaceArea"),
-                        resultSet.getInt("rooms"),
-                        resultSet.getLong("owner")
-                );
-                advertisement.setId(resultSet.getLong("id"));
+                Advertisement advertisement = createAdvertisementFromResultSet(resultSet);
                 advertisements.add(advertisement);
             }
             log.info("[Advertisements - SQL] Find all successful");
@@ -51,16 +69,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Advertisement advertisement = new Advertisement(
-                        resultSet.getString("title"),
-                        resultSet.getString("address"),
-                        resultSet.getInt("price"),
-                        resultSet.getInt("surfaceArea"),
-                        resultSet.getInt("rooms"),
-                        resultSet.getLong("owner")
-                );
-                advertisement.setId(resultSet.getLong("id"));
-                return advertisement;
+                return createAdvertisementFromResultSet(resultSet);
             }
             log.info("[Advertisements - SQL] Find by id successful");
         } catch (SQLException e) {
@@ -74,12 +83,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
                     + "VALUES (default, ?, ?, ?, ?, ?, ?)");
-            preparedStatement.setString(1, entity.getTitle());
-            preparedStatement.setString(2, entity.getAddress());
-            preparedStatement.setInt(3, entity.getPrice());
-            preparedStatement.setInt(4, entity.getSurfaceArea());
-            preparedStatement.setInt(5, entity.getRooms());
-            preparedStatement.setLong(6, entity.getOwner());
+            setParameters(entity, preparedStatement);
             preparedStatement.executeUpdate();
             log.info("[Advertisements - SQL] Create successful");
         } catch (SQLException e) {
@@ -92,12 +96,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
-            preparedStatement.setString(1, entity.getTitle());
-            preparedStatement.setString(2, entity.getAddress());
-            preparedStatement.setInt(3, entity.getPrice());
-            preparedStatement.setInt(4, entity.getSurfaceArea());
-            preparedStatement.setInt(5, entity.getRooms());
-            preparedStatement.setLong(6, entity.getOwner());
+            setParameters(entity, preparedStatement);
             preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
             log.info("[Advertisements - SQL] Update successful");
@@ -128,15 +127,7 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setInt(1, age);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Advertisement advertisement = new Advertisement(
-                        resultSet.getString("title"),
-                        resultSet.getString("address"),
-                        resultSet.getInt("price"),
-                        resultSet.getInt("surfaceArea"),
-                        resultSet.getInt("rooms"),
-                        resultSet.getLong("owner")
-                );
-                advertisement.setId(resultSet.getLong("id"));
+                Advertisement advertisement = createAdvertisementFromResultSet(resultSet);
                 advertisements.add(advertisement);
             }
             log.info("[Advertisements - SQL] Find by age successful");
