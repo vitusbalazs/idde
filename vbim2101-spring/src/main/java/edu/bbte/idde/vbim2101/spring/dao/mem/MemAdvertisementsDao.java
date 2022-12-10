@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-@Profile("mem")
 @Slf4j
+@Profile("mem")
 public class MemAdvertisementsDao implements AdvertisementsDao {
     private static final ConcurrentHashMap<Long, Advertisement> ENTITIES = new ConcurrentHashMap<>();
     private static final AtomicLong ID_GENERATOR = new AtomicLong(0L);

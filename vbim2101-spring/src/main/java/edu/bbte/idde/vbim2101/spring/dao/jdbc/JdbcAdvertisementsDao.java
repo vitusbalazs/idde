@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Repository
-@Profile("jdbc")
 @Slf4j
+@Profile("jdbc")
 public class JdbcAdvertisementsDao implements AdvertisementsDao {
     @Autowired
     private DataSource dataSource;

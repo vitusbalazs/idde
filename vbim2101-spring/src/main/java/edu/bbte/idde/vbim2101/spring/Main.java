@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan
@@ -20,13 +21,12 @@ public class Main {
     @Autowired
     private AdvertisementsDao advertisementsDao;
 
+    @Bean
     public CommandLineRunner runner() {
         return args -> {
             log.info("Hello");
             Advertisement newAdvertisement = new Advertisement("Szia", "Szia2", 1, 2, 3, 1L);
             advertisementsDao.create(newAdvertisement);
-
-            log.info(advertisementsDao.findAll().toString());
         };
     }
 }

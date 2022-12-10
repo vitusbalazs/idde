@@ -14,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-@Profile("mem")
 @Slf4j
+@Profile("mem")
 public class MemOwnersDao implements OwnersDao {
     private static final Map<Long, Owner> ENTITIES = new ConcurrentHashMap<>();
     private static final AtomicLong ID_GENERATOR = new AtomicLong();
