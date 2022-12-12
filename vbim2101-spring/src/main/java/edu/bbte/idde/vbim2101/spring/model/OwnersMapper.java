@@ -10,6 +10,7 @@ import java.util.Collection;
 @Mapper(componentModel = "spring")
 public abstract class OwnersMapper {
     public abstract Owner ownerFromDto(OwnerInDto ownerDto);
+
     public abstract OwnerOutDto dtoFromOwner(Owner owner);
 
     @IterableMapping(elementTargetType = OwnerOutDto.class)

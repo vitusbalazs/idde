@@ -31,13 +31,6 @@ public class DataSourceFactory {
     public DataSource getDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
 
-        log.info("jdbcUrl: " + jdbcUrl);
-        log.info("jdbcUser: " + jdbcUser);
-        log.info("jdbcPassword: " + jdbcPassword);
-        log.info("jdbcDatabase: " + jdbcDatabase);
-        log.info("jdbcPoolSize: " + jdbcPoolSize);
-        log.info("jdbcDriverClassName: " + jdbcDriverClassName);
-
         hikariConfig.setJdbcUrl("jdbc:mysql://" + jdbcUrl + "/" + jdbcDatabase + "?useSSL=false");
         hikariConfig.setUsername(jdbcUser);
         hikariConfig.setPassword(jdbcPassword);

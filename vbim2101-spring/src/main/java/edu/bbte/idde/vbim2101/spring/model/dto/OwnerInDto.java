@@ -9,10 +9,10 @@ import javax.validation.constraints.Positive;
 @Data
 public class OwnerInDto {
     @NotNull
-    @Length(max=50)
+    @Length(max = 50)
     private String name;
     @NotNull
-    @Length(max=50)
+    @Length(max = 50)
     private String email;
     @NotNull
     @Positive

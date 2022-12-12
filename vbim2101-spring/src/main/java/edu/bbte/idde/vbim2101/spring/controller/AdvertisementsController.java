@@ -44,7 +44,8 @@ public class AdvertisementsController {
     }
 
     @PutMapping
-    public void update(@RequestParam(required = true) Long id, @RequestBody @Valid AdvertisementInDto advertisementInDto) {
+    public void update(@RequestParam(required = true) Long id,
+                       @RequestBody @Valid AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         advertisement.setId(id);
         advertisementsDao.update(id, advertisement);

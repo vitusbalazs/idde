@@ -10,6 +10,7 @@ import java.util.Collection;
 @Mapper(componentModel = "spring")
 public abstract class AdvertisementsMapper {
     public abstract Advertisement advertisementFromDto(AdvertisementInDto advertisementDto);
+
     public abstract AdvertisementOutDto dtoFromAdvertisement(Advertisement advertisement);
 
     @IterableMapping(elementTargetType = AdvertisementOutDto.class)

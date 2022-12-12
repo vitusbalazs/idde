@@ -3,7 +3,6 @@ package edu.bbte.idde.vbim2101.spring.controller;
 import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.spring.model.Owner;
 import edu.bbte.idde.vbim2101.spring.model.OwnersMapper;
-import edu.bbte.idde.vbim2101.spring.model.dto.AdvertisementOutDto;
 import edu.bbte.idde.vbim2101.spring.model.dto.OwnerInDto;
 import edu.bbte.idde.vbim2101.spring.model.dto.OwnerOutDto;
 import lombok.extern.slf4j.Slf4j;
