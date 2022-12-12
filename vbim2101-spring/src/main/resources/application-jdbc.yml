@@ -1,5 +1,5 @@
 jdbc:
-  url: localhost
+  url: localhost:3306
   database: idde_vbim2101
   username: root
   password: root

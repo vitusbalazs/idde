@@ -28,7 +28,7 @@ public class MemOwnersDao implements OwnersDao {
 
     @Override
     public void create(Owner owner) {
-        Long id = ID_GENERATOR.getAndIncrement();
+        Long id = ID_GENERATOR.incrementAndGet();
         owner.setId(id);
         ENTITIES.put(id, owner);
         log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");

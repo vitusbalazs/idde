@@ -2,6 +2,7 @@ package edu.bbte.idde.vbim2101.spring.dao.jdbc;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 
 @Configuration
+@Slf4j
 @Profile("!mem")
 public class DataSourceFactory {
     @Value("${jdbc.url:localhost}")
@@ -28,6 +30,13 @@ public class DataSourceFactory {
     @Bean
     public DataSource getDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
+
+        log.info("jdbcUrl: " + jdbcUrl);
+        log.info("jdbcUser: " + jdbcUser);
+        log.info("jdbcPassword: " + jdbcPassword);
+        log.info("jdbcDatabase: " + jdbcDatabase);
+        log.info("jdbcPoolSize: " + jdbcPoolSize);
+        log.info("jdbcDriverClassName: " + jdbcDriverClassName);
 
         hikariConfig.setJdbcUrl("jdbc:mysql://" + jdbcUrl + "/" + jdbcDatabase + "?useSSL=false");
         hikariConfig.setUsername(jdbcUser);

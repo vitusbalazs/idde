@@ -45,7 +45,7 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
 
     @Override
     public void create(Advertisement advertisement) {
-        Long id = ID_GENERATOR.getAndIncrement();
+        Long id = ID_GENERATOR.incrementAndGet();
         advertisement.setId(id);
         ENTITIES.put(id, advertisement);
         log.info("[MemAdvertisement - DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
