@@ -26,7 +26,11 @@ public class OwnersController {
         if (age == null) {
             return ownersMapper.dtosFromOwners(ownersDao.findAll());
         }
-        return ownersMapper.dtosFromOwners(ownersDao.findByAge(age));
+        Collection<Owner> owners = ownersDao.findByAge(age);
+        if (owners.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return ownersMapper.dtosFromOwners(owners);
     }
 
     @GetMapping("/{id}")
@@ -44,7 +48,11 @@ public class OwnersController {
     }
 
     @PutMapping
-    public void update(@RequestParam(required = true) Long id, @RequestBody @Valid OwnerInDto ownerInDto) {
+    public void update(@RequestParam(required = true) Long id,
+                       @RequestBody @Valid OwnerInDto ownerInDto) {
+        if (ownersDao.findById(id) == null) {
+            throw new NotFoundException();
+        }
         Owner owner = ownersMapper.ownerFromDto(ownerInDto);
         owner.setId(id);
         ownersDao.update(id, owner);
@@ -52,6 +60,9 @@ public class OwnersController {
 
     @DeleteMapping
     public void delete(@RequestParam(required = true) Long id) {
+        if (ownersDao.findById(id) == null) {
+            throw new NotFoundException();
+        }
         ownersDao.delete(id);
     }
 }

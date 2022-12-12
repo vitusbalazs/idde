@@ -26,7 +26,11 @@ public class AdvertisementsController {
         if (rooms == null) {
             return advertisementsMapper.dtosFromAdvertisements(advertisementsDao.findAll());
         }
-        return advertisementsMapper.dtosFromAdvertisements(advertisementsDao.findByRooms(rooms));
+        Collection<Advertisement> advertisements = advertisementsDao.findByRooms(rooms);
+        if (advertisements.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return advertisementsMapper.dtosFromAdvertisements(advertisements);
     }
 
     @GetMapping("/{id}")
@@ -46,6 +50,9 @@ public class AdvertisementsController {
     @PutMapping
     public void update(@RequestParam(required = true) Long id,
                        @RequestBody @Valid AdvertisementInDto advertisementInDto) {
+        if (advertisementsDao.findById(id) == null) {
+            throw new NotFoundException();
+        }
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         advertisement.setId(id);
         advertisementsDao.update(id, advertisement);
@@ -53,6 +60,9 @@ public class AdvertisementsController {
 
     @DeleteMapping
     public void delete(@RequestParam(required = true) Long id) {
+        if (advertisementsDao.findById(id) == null) {
+            throw new NotFoundException();
+        }
         advertisementsDao.delete(id);
     }
 }
