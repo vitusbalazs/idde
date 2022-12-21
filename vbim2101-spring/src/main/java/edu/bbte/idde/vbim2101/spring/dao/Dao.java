@@ -9,9 +9,9 @@ public interface Dao<T extends BaseEntity> {
 
     T findById(Long id);
 
-    void create(T entity);
+    Long create(T entity);
 
-    void update(Long id, T entity);
+    Boolean update(Long id, T entity);
 
-    void delete(Long id);
+    Boolean delete(Long id);
 }

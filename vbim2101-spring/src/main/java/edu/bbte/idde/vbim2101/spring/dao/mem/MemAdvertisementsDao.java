@@ -44,16 +44,20 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public void create(Advertisement advertisement) {
+    public Long create(Advertisement advertisement) {
         Long id = ID_GENERATOR.incrementAndGet();
         advertisement.setId(id);
         ENTITIES.put(id, advertisement);
         log.info("[MemAdvertisement - DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
+        return id;
     }
 
     @Override
-    public void update(Long id, Advertisement advertisement) {
+    public Boolean update(Long id, Advertisement advertisement) {
         Advertisement toUpdate = this.findById(id);
+        if (Objects.isNull(toUpdate)) {
+            return false;
+        }
         toUpdate.setTitle(advertisement.getTitle());
         toUpdate.setAddress(advertisement.getAddress());
         toUpdate.setPrice(advertisement.getPrice());
@@ -61,12 +65,18 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
         toUpdate.setRooms(advertisement.getRooms());
         toUpdate.setOwner(advertisement.getOwner());
         log.info("[MemAdvertisement - DAO] Updated advertisement ((New)Title=" + advertisement.getTitle() + ")");
+        return true;
     }
 
     @Override
-    public void delete(Long id) {
+    public Boolean delete(Long id) {
         log.info("[MemAdvertisement - DAO] Deleting advertisement... (Title=" + ENTITIES.get(id).getTitle() + ")");
-        ENTITIES.remove(id);
+        Advertisement deleted = ENTITIES.remove(id);
+        if (deleted == null) {
+            log.error("[MemAdvertisement - DAO] Advertisement not found! (ID=" + id + ")");
+            return false;
+        }
         log.info("[MemAdvertisement - DAO] Delete completed");
+        return true;
     }
 }

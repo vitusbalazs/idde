@@ -1,7 +1,8 @@
-package edu.bbte.idde.vbim2101.spring.model;
+package edu.bbte.idde.vbim2101.spring.controller.mapper;
 
-import edu.bbte.idde.vbim2101.spring.model.dto.AdvertisementInDto;
-import edu.bbte.idde.vbim2101.spring.model.dto.AdvertisementOutDto;
+import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementInDto;
+import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementOutDto;
+import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 

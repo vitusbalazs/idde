@@ -20,8 +20,6 @@ public class DataSourceFactory {
     private String jdbcUser;
     @Value("${jdbc.password:root}")
     private String jdbcPassword;
-    @Value("${jdbc.database:idde_vbim2101}")
-    private String jdbcDatabase;
     @Value("${jdbc.poolSize:10}")
     private Integer jdbcPoolSize;
     @Value("${jdbc.jdbcDriver:com.mysql.cj.jdbc.Driver}")
@@ -31,7 +29,7 @@ public class DataSourceFactory {
     public DataSource getDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
 
-        hikariConfig.setJdbcUrl("jdbc:mysql://" + jdbcUrl + "/" + jdbcDatabase + "?useSSL=false");
+        hikariConfig.setJdbcUrl(jdbcUrl);
         hikariConfig.setUsername(jdbcUser);
         hikariConfig.setPassword(jdbcPassword);
 

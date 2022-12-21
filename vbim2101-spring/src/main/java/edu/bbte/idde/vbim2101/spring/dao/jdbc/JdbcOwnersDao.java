@@ -75,42 +75,66 @@ public class JdbcOwnersDao implements OwnersDao {
     }
 
     @Override
-    public void create(Owner entity) {
+    public Long create(Owner entity) {
+        Long id = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Owners "
                     + "VALUES (default, ?, ?, ?)");
             setParameters(entity, preparedStatement);
             preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                id = resultSet.getLong(1);
+            }
             log.info("[Owners - SQL] Create successful");
         } catch (SQLException e) {
             log.error("[Owners - SQL] Create failed... ", e);
         }
+        return id;
     }
 
     @Override
-    public void update(Long id, Owner entity) {
+    public Boolean update(Long id, Owner entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Owners "
                     + "SET name=?, address=?, rating=? WHERE id=?");
             setParameters(entity, preparedStatement);
             preparedStatement.setLong(4, id);
             preparedStatement.executeUpdate();
-            log.info("[Owners - SQL] Update successful");
+            Integer rowsAffected = preparedStatement.getUpdateCount();
+            if (rowsAffected == 1) {
+                log.info("[Owners - SQL] Update successful");
+                return true;
+            }
+            log.error("[Owners - SQL] Update unsuccessful");
         } catch (SQLException e) {
-            log.error("[Owners - SQL] Create failed... ", e);
+            log.error("[Owners - SQL] Update failed... ", e);
         }
+        return false;
     }
 
     @Override
-    public void delete(Long id) {
+    public Boolean delete(Long id) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Owners WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            log.info("[Owners - SQL] Delete successful");
+            Integer rowCount = 0;
+            preparedStatement = connection.prepareStatement("SELECT ROW_COUNT()");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                rowCount = resultSet.getInt(1);
+            }
+            if (rowCount == 1) {
+                log.info("[Owners - SQL] Delete successful");
+                return true;
+            }
+            log.error("[Owners - SQL] Delete unsuccessful");
         } catch (SQLException e) {
             log.error("[Owners - SQL] Delete failed... ", e);
         }
+        return false;
     }
 
     @Override

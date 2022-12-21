@@ -1,6 +1,5 @@
 jdbc:
-  url: localhost:3306
-  database: idde_vbim2101
+  url: jdbc:mysql://localhost:3306/idde_vbim2101?useSSL=false
   username: root
   password: root
   poolsize: 10

@@ -1,7 +1,8 @@
-package edu.bbte.idde.vbim2101.spring.model;
+package edu.bbte.idde.vbim2101.spring.controller.mapper;
 
-import edu.bbte.idde.vbim2101.spring.model.dto.OwnerInDto;
-import edu.bbte.idde.vbim2101.spring.model.dto.OwnerOutDto;
+import edu.bbte.idde.vbim2101.spring.controller.dto.OwnerInDto;
+import edu.bbte.idde.vbim2101.spring.controller.dto.OwnerOutDto;
+import edu.bbte.idde.vbim2101.spring.model.Owner;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 

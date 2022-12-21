@@ -83,42 +83,66 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public void create(Advertisement entity) {
+    public Long create(Advertisement entity) {
+        Long id = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
                     + "VALUES (default, ?, ?, ?, ?, ?, ?)");
             setParameters(entity, preparedStatement);
             preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                id = resultSet.getLong(1);
+            }
             log.info("[Advertisements - SQL] Create successful");
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Create failed... ", e);
         }
+        return id;
     }
 
     @Override
-    public void update(Long id, Advertisement entity) {
+    public Boolean update(Long id, Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
             setParameters(entity, preparedStatement);
             preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
-            log.info("[Advertisements - SQL] Update successful");
+            Integer rowsAffected = preparedStatement.getUpdateCount();
+            if (rowsAffected == 1) {
+                log.info("[Advertisements - SQL] Update successful");
+                return true;
+            }
+            log.error("[Advertisements - SQL] Update unsuccessful");
         } catch (SQLException e) {
-            log.error("[Advertisements - SQL] Create failed... ", e);
+            log.error("[Advertisements - SQL] Update failed... ", e);
         }
+        return false;
     }
 
     @Override
-    public void delete(Long id) {
+    public Boolean delete(Long id) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Advertisements WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            log.info("[Advertisements - SQL] Delete successful");
+            Integer rowCount = 0;
+            preparedStatement = connection.prepareStatement("SELECT ROW_COUNT()");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                rowCount = resultSet.getInt(1);
+            }
+            if (rowCount == 1) {
+                log.info("[Advertisements - SQL] Delete successful");
+                return true;
+            }
+            log.error("[Advertisements - SQL] Delete unsuccessful");
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Delete failed... ", e);
         }
+        return false;
     }
 
     @Override

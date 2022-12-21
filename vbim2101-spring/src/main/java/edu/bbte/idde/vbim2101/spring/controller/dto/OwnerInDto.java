@@ -1,4 +1,4 @@
-package edu.bbte.idde.vbim2101.spring.model.dto;
+package edu.bbte.idde.vbim2101.spring.controller.dto;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

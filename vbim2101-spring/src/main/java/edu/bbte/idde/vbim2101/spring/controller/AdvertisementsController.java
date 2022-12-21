@@ -2,9 +2,9 @@ package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.spring.model.Advertisement;
-import edu.bbte.idde.vbim2101.spring.model.AdvertisementsMapper;
-import edu.bbte.idde.vbim2101.spring.model.dto.AdvertisementInDto;
-import edu.bbte.idde.vbim2101.spring.model.dto.AdvertisementOutDto;
+import edu.bbte.idde.vbim2101.spring.controller.mapper.AdvertisementsMapper;
+import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementInDto;
+import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementOutDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +27,6 @@ public class AdvertisementsController {
             return advertisementsMapper.dtosFromAdvertisements(advertisementsDao.findAll());
         }
         Collection<Advertisement> advertisements = advertisementsDao.findByRooms(rooms);
-        if (advertisements.isEmpty()) {
-            throw new NotFoundException();
-        }
         return advertisementsMapper.dtosFromAdvertisements(advertisements);
     }
 
@@ -43,26 +40,41 @@ public class AdvertisementsController {
     }
 
     @PostMapping
-    public void create(@RequestBody @Valid AdvertisementInDto advertisementInDto) {
-        advertisementsDao.create(advertisementsMapper.advertisementFromDto(advertisementInDto));
+    public String create(@RequestBody @Valid AdvertisementInDto advertisementInDto) {
+        Long id = advertisementsDao.create(advertisementsMapper.advertisementFromDto(advertisementInDto));
+        if (id == null) {
+            log.error("Failed to create advertisement");
+            return "Failed to create advertisement";
+        } else {
+            log.info("Created advertisement with id: " + id);
+            return "Created advertisement with id: " + id;
+        }
     }
 
-    @PutMapping
-    public void update(@RequestParam(required = true) Long id,
-                       @RequestBody @Valid AdvertisementInDto advertisementInDto) {
-        if (advertisementsDao.findById(id) == null) {
-            throw new NotFoundException();
-        }
+    @PutMapping("/{id}")
+    public String update(@PathVariable Long id, @RequestBody @Valid AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         advertisement.setId(id);
-        advertisementsDao.update(id, advertisement);
+        Boolean success = advertisementsDao.update(id, advertisement);
+        if (success) {
+            log.info("Updated advertisement with id: " + id);
+            return "Updated advertisement with id: " + id;
+
+        } else {
+            log.error("Failed to update advertisement with id: " + id);
+            return "Failed to update advertisement with id: " + id;
+        }
     }
 
-    @DeleteMapping
-    public void delete(@RequestParam(required = true) Long id) {
-        if (advertisementsDao.findById(id) == null) {
-            throw new NotFoundException();
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id) {
+        Boolean success = advertisementsDao.delete(id);
+        if (success) {
+            log.info("Deleted advertisement with id: " + id);
+            return "Deleted advertisement with id: " + id;
+        } else {
+            log.error("Failed to delete advertisement with id: " + id);
+            return "Failed to delete advertisement with id: " + id;
         }
-        advertisementsDao.delete(id);
     }
 }

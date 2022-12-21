@@ -2,9 +2,9 @@ package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.spring.model.Owner;
-import edu.bbte.idde.vbim2101.spring.model.OwnersMapper;
-import edu.bbte.idde.vbim2101.spring.model.dto.OwnerInDto;
-import edu.bbte.idde.vbim2101.spring.model.dto.OwnerOutDto;
+import edu.bbte.idde.vbim2101.spring.controller.mapper.OwnersMapper;
+import edu.bbte.idde.vbim2101.spring.controller.dto.OwnerInDto;
+import edu.bbte.idde.vbim2101.spring.controller.dto.OwnerOutDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +27,6 @@ public class OwnersController {
             return ownersMapper.dtosFromOwners(ownersDao.findAll());
         }
         Collection<Owner> owners = ownersDao.findByAge(age);
-        if (owners.isEmpty()) {
-            throw new NotFoundException();
-        }
         return ownersMapper.dtosFromOwners(owners);
     }
 
@@ -43,26 +40,40 @@ public class OwnersController {
     }
 
     @PostMapping
-    public void create(@RequestBody @Valid OwnerInDto ownerInDto) {
-        ownersDao.create(ownersMapper.ownerFromDto(ownerInDto));
+    public String create(@RequestBody @Valid OwnerInDto ownerInDto) {
+        Long id = ownersDao.create(ownersMapper.ownerFromDto(ownerInDto));
+        if (id == null) {
+            log.error("Failed to create owner");
+            return "Failed to create owner";
+        } else {
+            log.info("Created owner with id: " + id);
+            return "Created owner with id: " + id;
+        }
     }
 
-    @PutMapping
-    public void update(@RequestParam(required = true) Long id,
-                       @RequestBody @Valid OwnerInDto ownerInDto) {
-        if (ownersDao.findById(id) == null) {
-            throw new NotFoundException();
-        }
+    @PutMapping("/{id}")
+    public String update(@PathVariable Long id, @RequestBody @Valid OwnerInDto ownerInDto) {
         Owner owner = ownersMapper.ownerFromDto(ownerInDto);
         owner.setId(id);
-        ownersDao.update(id, owner);
+        Boolean success = ownersDao.update(id, owner);
+        if (success) {
+            log.info("Updated owner with id: " + id);
+            return "Updated owner with id: " + id;
+        } else {
+            log.error("Failed to update owner with id: " + id);
+            return "Failed to update owner with id: " + id;
+        }
     }
 
-    @DeleteMapping
-    public void delete(@RequestParam(required = true) Long id) {
-        if (ownersDao.findById(id) == null) {
-            throw new NotFoundException();
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id) {
+        Boolean success = ownersDao.delete(id);
+        if (success) {
+            log.info("Deleted owner with id: " + id);
+            return "Deleted owner with id: " + id;
+        } else {
+            log.error("Failed to delete owner with id: " + id);
+            return "Failed to delete owner with id: " + id;
         }
-        ownersDao.delete(id);
     }
 }
