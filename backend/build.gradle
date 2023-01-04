@@ -1,6 +1,8 @@
 dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    runtimeOnly group: 'ch.qos.logback', name:'logback-classic', version:'1.2.3'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    runtimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     runtimeOnly group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.14.0'

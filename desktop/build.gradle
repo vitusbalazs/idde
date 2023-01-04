@@ -1,5 +1,9 @@
 dependencies {
     implementation project(':backend')
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    runtimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 }
 
 apply plugin: 'application'
