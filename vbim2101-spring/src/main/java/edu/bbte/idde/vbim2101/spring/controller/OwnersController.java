@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @RestController
 @RequestMapping("/owners")
-@Slf4j
 public class OwnersController {
     @Autowired
     private OwnersDao ownersDao;
@@ -32,7 +32,7 @@ public class OwnersController {
 
     @GetMapping("/{id}")
     public OwnerOutDto findById(@PathVariable("id") Long id) {
-        Owner result = ownersDao.findById(id);
+        Owner result = ownersDao.getById(id);
         if (result == null) {
             throw new NotFoundException();
         }
@@ -41,7 +41,7 @@ public class OwnersController {
 
     @PostMapping
     public String create(@RequestBody @Valid OwnerInDto ownerInDto) {
-        Long id = ownersDao.create(ownersMapper.ownerFromDto(ownerInDto));
+        Long id = ownersDao.saveAndFlush(ownersMapper.ownerFromDto(ownerInDto)).getId();
         if (id == null) {
             log.error("Failed to create owner");
             return "Failed to create owner";

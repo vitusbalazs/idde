@@ -22,6 +22,24 @@ CREATE TABLE IF NOT EXISTS Advertisements  (
     FOREIGN KEY (owner) REFERENCES Owners(ID)
 );
 
+CREATE TABLE IF NOT EXISTS ownerjpa (
+	ID INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(200),
+    age INT
+);
+
+CREATE TABLE IF NOT EXISTS advertisementjpa  (
+	ID INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100),
+    address VARCHAR(200),
+    price INT,
+    surfaceArea INT,
+    rooms INT,
+    owner INT,
+    FOREIGN KEY (owner) REFERENCES ownerjpa(ID)
+);
+
 INSERT INTO Owners VALUES(default, "Jakab Sarolta", "jgysarolta@gmail.com", 20);
 INSERT INTO Owners VALUES(default, "Vitus Balazs", "vitusbalazs01@yahoo.com", 21);
 INSERT INTO Owners VALUES(default, "Galambos Lajos", "lagzi@lajcsi.hu", 61);
@@ -34,8 +52,8 @@ SELECT * FROM Advertisements;
 SELECT * FROM Owners;
 
 
-UPDATE Advertisements SET surfaceArea = 100, rooms = 2 WHERE ID IN (1,3);
-SELECT ROW_COUNT();
+-- UPDATE Advertisements SET surfaceArea = 100, rooms = 2 WHERE ID IN (1,3);
+-- SELECT ROW_COUNT();
 
 -- DELETE FROM Advertisements WHERE ID IN (1,3);
 -- SELECT ROW_COUNT();

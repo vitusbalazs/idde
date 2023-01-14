@@ -15,26 +15,25 @@ import javax.sql.DataSource;
 @Profile("!mem")
 public class DataSourceFactory {
     @Value("${jdbc.url:localhost}")
-    private String jdbcUrl;
+    private String url;
     @Value("${jdbc.username:root}")
-    private String jdbcUser;
+    private String userName;
     @Value("${jdbc.password:root}")
-    private String jdbcPassword;
+    private String passWord;
     @Value("${jdbc.poolSize:10}")
-    private Integer jdbcPoolSize;
+    private Integer poolSize;
     @Value("${jdbc.jdbcDriver:com.mysql.cj.jdbc.Driver}")
-    private String jdbcDriverClassName;
+    private String driverClass;
 
     @Bean
     public DataSource getDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
 
-        hikariConfig.setJdbcUrl(jdbcUrl);
-        hikariConfig.setUsername(jdbcUser);
-        hikariConfig.setPassword(jdbcPassword);
-
-        hikariConfig.setMaximumPoolSize(jdbcPoolSize);
-        hikariConfig.setDriverClassName(jdbcDriverClassName);
+        hikariConfig.setDriverClassName(driverClass);
+        hikariConfig.setJdbcUrl(url);
+        hikariConfig.setUsername(userName);
+        hikariConfig.setPassword(passWord);
+        hikariConfig.setMaximumPoolSize(poolSize);
 
         return new HikariDataSource(hikariConfig);
     }

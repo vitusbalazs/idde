@@ -21,23 +21,23 @@ public class MemOwnersDao implements OwnersDao {
     private static final AtomicLong ID_GENERATOR = new AtomicLong();
 
     @Override
-    public Owner findById(Long id) {
+    public Owner getById(Long id) {
         log.info("[MemOwners - DAO] Finding owner by id...");
         return ENTITIES.get(id);
     }
 
     @Override
-    public Long create(Owner owner) {
+    public Owner saveAndFlush(Owner owner) {
         Long id = ID_GENERATOR.incrementAndGet();
         owner.setId(id);
         ENTITIES.put(id, owner);
         log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");
-        return id;
+        return ENTITIES.get(id);
     }
 
     @Override
     public Boolean update(Long id, Owner owner) {
-        Owner toUpdate = this.findById(id);
+        Owner toUpdate = this.getById(id);
         if (Objects.isNull(toUpdate)) {
             return false;
         }

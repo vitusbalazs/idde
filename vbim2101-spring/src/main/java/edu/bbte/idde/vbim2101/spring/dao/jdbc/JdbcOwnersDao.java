@@ -58,7 +58,7 @@ public class JdbcOwnersDao implements OwnersDao {
     }
 
     @Override
-    public Owner findById(Long id) {
+    public Owner getById(Long id) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners "
                     + "WHERE id=?");
@@ -75,7 +75,7 @@ public class JdbcOwnersDao implements OwnersDao {
     }
 
     @Override
-    public Long create(Owner entity) {
+    public Owner saveAndFlush(Owner entity) {
         Long id = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Owners "
@@ -91,7 +91,7 @@ public class JdbcOwnersDao implements OwnersDao {
         } catch (SQLException e) {
             log.error("[Owners - SQL] Create failed... ", e);
         }
-        return id;
+        return getById(id);
     }
 
     @Override

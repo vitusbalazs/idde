@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @RestController
 @RequestMapping("/advertisements")
-@Slf4j
 public class AdvertisementsController {
     @Autowired
     private AdvertisementsDao advertisementsDao;
@@ -32,7 +32,7 @@ public class AdvertisementsController {
 
     @GetMapping("/{id}")
     public AdvertisementOutDto findById(@PathVariable("id") Long id) {
-        Advertisement result = advertisementsDao.findById(id);
+        Advertisement result = advertisementsDao.getById(id);
         if (result == null) {
             throw new NotFoundException();
         }
@@ -41,7 +41,7 @@ public class AdvertisementsController {
 
     @PostMapping
     public String create(@RequestBody @Valid AdvertisementInDto advertisementInDto) {
-        Long id = advertisementsDao.create(advertisementsMapper.advertisementFromDto(advertisementInDto));
+        Long id = advertisementsDao.saveAndFlush(advertisementsMapper.advertisementFromDto(advertisementInDto)).getId();
         if (id == null) {
             log.error("Failed to create advertisement");
             return "Failed to create advertisement";

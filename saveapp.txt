@@ -1,0 +1,5 @@
+  url: jdbc:mysql://localhost:3306/idde_vbim2101?allowPublicKeyRetrieval=true&useSSL=false
+  username: root
+  password: root
+  poolsize: 10
+  jdbcDriver: com.mysql.cj.jdbc.Driver

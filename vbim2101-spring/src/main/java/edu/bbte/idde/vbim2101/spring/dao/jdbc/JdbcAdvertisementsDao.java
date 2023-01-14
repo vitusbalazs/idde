@@ -65,7 +65,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public Advertisement findById(Long id) {
+    public Advertisement getById(Long id) {
         //String query = "SELECT * FROM Book WHERE Id = ?";
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements "
@@ -83,7 +83,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public Long create(Advertisement entity) {
+    public Advertisement saveAndFlush(Advertisement entity) {
         Long id = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
@@ -99,7 +99,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Create failed... ", e);
         }
-        return id;
+        return getById(id);
     }
 
     @Override

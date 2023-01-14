@@ -38,23 +38,23 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public Advertisement findById(Long id) {
+    public Advertisement getById(Long id) {
         log.info("[MemAdvertisement - DAO] Finding advertisement by ID...");
         return ENTITIES.get(id);
     }
 
     @Override
-    public Long create(Advertisement advertisement) {
+    public Advertisement saveAndFlush(Advertisement advertisement) {
         Long id = ID_GENERATOR.incrementAndGet();
         advertisement.setId(id);
         ENTITIES.put(id, advertisement);
         log.info("[MemAdvertisement - DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
-        return id;
+        return ENTITIES.get(id);
     }
 
     @Override
     public Boolean update(Long id, Advertisement advertisement) {
-        Advertisement toUpdate = this.findById(id);
+        Advertisement toUpdate = this.getById(id);
         if (Objects.isNull(toUpdate)) {
             return false;
         }
