@@ -16,4 +16,6 @@ public class Owner extends BaseEntity {
     private String name;
     private String email;
     private Integer age;
+
+    // Collection
 }

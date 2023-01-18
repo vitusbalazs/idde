@@ -1,6 +1,7 @@
 package edu.bbte.idde.vbim2101.spring.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.spring.dao.AdvertisementsDao;
+import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import java.util.Collection;
 public class JdbcAdvertisementsDao implements AdvertisementsDao {
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private OwnersDao ownersDao;
 
     private Advertisement createAdvertisementFromResultSet(ResultSet resultSet) throws SQLException {
         Advertisement advertisement;
@@ -30,7 +33,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
                 resultSet.getInt("price"),
                 resultSet.getInt("surfaceArea"),
                 resultSet.getInt("rooms"),
-                resultSet.getLong("owner")
+                ownersDao.getById(resultSet.getLong("owner"))
         );
         advertisement.setId(resultSet.getLong("id"));
         return advertisement;
@@ -44,7 +47,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
         preparedStatement.setInt(3, advertisement.getPrice());
         preparedStatement.setInt(4, advertisement.getSurfaceArea());
         preparedStatement.setInt(5, advertisement.getRooms());
-        preparedStatement.setLong(6, advertisement.getOwner());
+        preparedStatement.setLong(6, advertisement.getOwner().getId());
     }
 
     @Override
@@ -115,7 +118,12 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
-            setParameters(entity, preparedStatement);
+            preparedStatement.setString(1, entity.getTitle());
+            preparedStatement.setString(2, entity.getAddress());
+            preparedStatement.setInt(3, entity.getPrice());
+            preparedStatement.setInt(4, entity.getRooms());
+            preparedStatement.setInt(5, entity.getSurfaceArea());
+            preparedStatement.setLong(6, entity.getOwner().getId());
             preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
             Integer rowsAffected = preparedStatement.getUpdateCount();

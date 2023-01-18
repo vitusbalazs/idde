@@ -1,10 +1,12 @@
 package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.AdvertisementsDao;
+import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import edu.bbte.idde.vbim2101.spring.controller.mapper.AdvertisementsMapper;
 import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementInDto;
 import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementOutDto;
+import edu.bbte.idde.vbim2101.spring.model.Owner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,8 @@ public class AdvertisementsController {
     private AdvertisementsDao advertisementsDao;
     @Autowired
     private AdvertisementsMapper advertisementsMapper;
+    @Autowired
+    private OwnersDao ownersDao;
 
     @GetMapping
     public Collection<AdvertisementOutDto> findAll(@RequestParam(required = false) Integer rooms) {
@@ -41,7 +45,10 @@ public class AdvertisementsController {
 
     @PostMapping
     public String create(@RequestBody @Valid AdvertisementInDto advertisementInDto) {
-        Long id = advertisementsDao.saveAndFlush(advertisementsMapper.advertisementFromDto(advertisementInDto)).getId();
+        Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
+        Owner owner = ownersDao.getById(advertisementInDto.getOwner());
+        advertisement.setOwner(owner);
+        Long id = advertisementsDao.saveAndFlush(advertisement).getId();
         if (id == null) {
             log.error("Failed to create advertisement");
             return "Failed to create advertisement";
@@ -55,6 +62,7 @@ public class AdvertisementsController {
     public String update(@PathVariable Long id, @RequestBody @Valid AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         advertisement.setId(id);
+        advertisement.setOwner(ownersDao.getById(advertisementInDto.getOwner()));
         advertisementsDao.saveAndFlush(advertisement);
         Boolean success = advertisementsDao.getById(id) != null;
         if (success) {

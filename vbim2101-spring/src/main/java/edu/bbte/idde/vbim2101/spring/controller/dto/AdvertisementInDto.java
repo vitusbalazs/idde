@@ -1,5 +1,6 @@
 package edu.bbte.idde.vbim2101.spring.controller.dto;
 
+import edu.bbte.idde.vbim2101.spring.model.Owner;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 

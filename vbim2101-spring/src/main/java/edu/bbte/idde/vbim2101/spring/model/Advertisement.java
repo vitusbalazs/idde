@@ -17,8 +17,8 @@ public class Advertisement extends BaseEntity {
     private Integer price;
     private Integer surfaceArea;
     private Integer rooms;
-    private Long owner;
-    /*@JoinColumn(name = "owner", nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Owner owner;*/
+
+    @JoinColumn(name = "owner_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Owner owner;
 }

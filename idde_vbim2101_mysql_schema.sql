@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS advertisementjpa  (
     price INT,
     surfaceArea INT,
     rooms INT,
-    owner INT,
-    FOREIGN KEY (owner) REFERENCES ownerjpa(ID)
+    owner_id INT,
+    FOREIGN KEY (owner_id) REFERENCES ownerjpa(ID)
 );
 
 INSERT INTO Owners VALUES(default, "Jakab Sarolta", "jgysarolta@gmail.com", 20);

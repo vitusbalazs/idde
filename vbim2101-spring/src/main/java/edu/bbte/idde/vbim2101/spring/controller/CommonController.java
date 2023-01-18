@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// findall advertisments for one owner, create, delete
+
+// findall -> meglevo owner <- osszes advertisment
+// create -> meglevo owner <- uj advertisementet
+// delete -> meglevo owner <- kitorlom advertisment
 @Slf4j
 @RestController
 @RequestMapping("/common")
