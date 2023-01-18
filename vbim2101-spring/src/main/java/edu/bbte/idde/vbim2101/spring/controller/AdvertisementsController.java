@@ -55,7 +55,8 @@ public class AdvertisementsController {
     public String update(@PathVariable Long id, @RequestBody @Valid AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         advertisement.setId(id);
-        Boolean success = advertisementsDao.update(id, advertisement);
+        advertisementsDao.saveAndFlush(advertisement);
+        Boolean success = advertisementsDao.getById(id) != null;
         if (success) {
             log.info("Updated advertisement with id: " + id);
             return "Updated advertisement with id: " + id;
@@ -68,7 +69,8 @@ public class AdvertisementsController {
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
-        Boolean success = advertisementsDao.delete(id);
+        advertisementsDao.delete(advertisementsDao.getById(id));
+        Boolean success = advertisementsDao.getById(id) == null;
         if (success) {
             log.info("Deleted advertisement with id: " + id);
             return "Deleted advertisement with id: " + id;

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 
 @Repository
@@ -15,5 +16,6 @@ import java.util.Collection;
 public interface JpaAdvertisementsDao extends AdvertisementsDao, JpaRepository<Advertisement, Long> {
     @Modifying
     @Query("select a from Advertisement a where a.rooms=?1")
+    @Transactional
     Collection<Advertisement> findByRooms(Integer age);
 }

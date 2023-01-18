@@ -11,7 +11,5 @@ public interface Dao<T extends BaseEntity> {
 
     T saveAndFlush(T entity);
 
-//    Boolean update(Long id, T entity);
-
-//    Boolean delete(Long id);
+    void delete(T entity);
 }

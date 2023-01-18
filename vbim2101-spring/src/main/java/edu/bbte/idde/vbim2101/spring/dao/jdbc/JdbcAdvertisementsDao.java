@@ -86,24 +86,32 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
     public Advertisement saveAndFlush(Advertisement entity) {
         Long id = null;
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
-                    + "VALUES (default, ?, ?, ?, ?, ?, ?)");
-            setParameters(entity, preparedStatement);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements "
+                    + "WHERE id=?");
+            preparedStatement.setLong(1, entity.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                id = resultSet.getLong(1);
+                update(entity.getId(), entity);
+            } else {
+                PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Advertisements "
+                        + "VALUES (default, ?, ?, ?, ?, ?, ?)");
+                setParameters(entity, preparedStatement);
+                preparedStatement2.executeUpdate();
+                preparedStatement2 = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+                ResultSet resultSet2 = preparedStatement2.executeQuery();
+                if (resultSet2.next()) {
+                    id = resultSet2.getLong(1);
+                }
+                log.info("[Advertisements - SQL] Create successful");
             }
-            log.info("[Advertisements - SQL] Create successful");
+
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Create failed... ", e);
         }
         return getById(id);
     }
 
-    @Override
-    public Boolean update(Long id, Advertisement entity) {
+    public void update(Long id, Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
@@ -113,20 +121,18 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
             Integer rowsAffected = preparedStatement.getUpdateCount();
             if (rowsAffected == 1) {
                 log.info("[Advertisements - SQL] Update successful");
-                return true;
             }
             log.error("[Advertisements - SQL] Update unsuccessful");
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Update failed... ", e);
         }
-        return false;
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public void delete(Advertisement adv) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Advertisements WHERE id=?");
-            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(1, adv.getId());
             preparedStatement.executeUpdate();
             Integer rowCount = 0;
             preparedStatement = connection.prepareStatement("SELECT ROW_COUNT()");
@@ -136,13 +142,11 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
             }
             if (rowCount == 1) {
                 log.info("[Advertisements - SQL] Delete successful");
-                return true;
             }
             log.error("[Advertisements - SQL] Delete unsuccessful");
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Delete failed... ", e);
         }
-        return false;
     }
 
     @Override

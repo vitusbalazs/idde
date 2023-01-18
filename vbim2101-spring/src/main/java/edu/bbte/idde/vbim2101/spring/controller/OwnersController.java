@@ -55,7 +55,8 @@ public class OwnersController {
     public String update(@PathVariable Long id, @RequestBody @Valid OwnerInDto ownerInDto) {
         Owner owner = ownersMapper.ownerFromDto(ownerInDto);
         owner.setId(id);
-        Boolean success = ownersDao.update(id, owner);
+        ownersDao.saveAndFlush(owner);
+        Boolean success = ownersDao.getById(id) != null;
         if (success) {
             log.info("Updated owner with id: " + id);
             return "Updated owner with id: " + id;
@@ -67,7 +68,8 @@ public class OwnersController {
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
-        Boolean success = ownersDao.delete(id);
+        ownersDao.delete(ownersDao.getById(id));
+        Boolean success = ownersDao.getById(id) == null;
         if (success) {
             log.info("Deleted owner with id: " + id);
             return "Deleted owner with id: " + id;

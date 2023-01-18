@@ -28,36 +28,38 @@ public class MemOwnersDao implements OwnersDao {
 
     @Override
     public Owner saveAndFlush(Owner owner) {
-        Long id = ID_GENERATOR.incrementAndGet();
-        owner.setId(id);
-        ENTITIES.put(id, owner);
-        log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");
-        return ENTITIES.get(id);
+        if (ENTITIES.containsKey(owner.getId())) {
+            update(owner.getId(), owner);
+            log.info("[MemOwners - DAO] Updated owner (Name=" + owner.getName() + ")");
+        } else {
+            owner.setId(ID_GENERATOR.incrementAndGet());
+            ENTITIES.put(owner.getId(), owner);
+            log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");
+        }
+
+        return ENTITIES.get(owner.getId());
     }
 
-    @Override
-    public Boolean update(Long id, Owner owner) {
+    public void update(Long id, Owner owner) {
         Owner toUpdate = this.getById(id);
         if (Objects.isNull(toUpdate)) {
-            return false;
+            log.error("[MemOwners - DAO] Owner not found");
+            return;
         }
         toUpdate.setName(owner.getName());
         toUpdate.setEmail(owner.getEmail());
         toUpdate.setAge(owner.getAge());
         log.info("[MemOwners - DAO] Updated owner ((New)Name=" + owner.getName() + ")");
-        return true;
     }
 
     @Override
-    public Boolean delete(Long id) {
-        log.info("[MemOwners - DAO] Deleting owner... (Title=" + ENTITIES.get(id).getName() + ")");
-        Owner deleted = ENTITIES.remove(id);
+    public void delete(Owner owner) {
+        log.info("[MemOwners - DAO] Deleting owner... (Title=" + ENTITIES.get(owner.getId()).getName() + ")");
+        Owner deleted = ENTITIES.remove(owner.getId());
         if (deleted == null) {
-            log.error("[MemOwners - DAO] Owner not found! (ID=" + id + ")");
-            return false;
+            log.error("[MemOwners - DAO] Owner not found! (ID=" + owner.getId() + ")");
         }
         log.info("[MemOwners - DAO] Delete completed");
-        return true;
     }
 
     @Override

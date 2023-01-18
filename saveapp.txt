@@ -3,3 +3,9 @@
   password: root
   poolsize: 10
   jdbcDriver: com.mysql.cj.jdbc.Driver
+
+
+
+
+TO-DO:
+    - fix update in controller

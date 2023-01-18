@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 
 @Repository
@@ -15,5 +16,8 @@ import java.util.Collection;
 public interface JpaOwnersDao extends OwnersDao, JpaRepository<Owner, Long> {
     @Modifying
     @Query("select o from Owner o where o.age=?1")
+    @Transactional
     Collection<Owner> findByAge(Integer age);
+
+
 }

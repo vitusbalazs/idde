@@ -45,19 +45,20 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
 
     @Override
     public Advertisement saveAndFlush(Advertisement advertisement) {
-        Long id = ID_GENERATOR.incrementAndGet();
-        advertisement.setId(id);
-        ENTITIES.put(id, advertisement);
-        log.info("[MemAdvertisement - DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
-        return ENTITIES.get(id);
+        if (ENTITIES.containsKey(advertisement.getId())) {
+            update(advertisement.getId(), advertisement);
+            log.info("[MemAdvertisement - DAO] Updated advertisement (Title=" + advertisement.getTitle() + ")");
+        } else {
+            advertisement.setId(ID_GENERATOR.incrementAndGet());
+            ENTITIES.put(advertisement.getId(), advertisement);
+            log.info("[MemAdvertisement - DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
+        }
+
+        return ENTITIES.get(advertisement.getId());
     }
 
-    @Override
-    public Boolean update(Long id, Advertisement advertisement) {
+    public void update(Long id, Advertisement advertisement) {
         Advertisement toUpdate = this.getById(id);
-        if (Objects.isNull(toUpdate)) {
-            return false;
-        }
         toUpdate.setTitle(advertisement.getTitle());
         toUpdate.setAddress(advertisement.getAddress());
         toUpdate.setPrice(advertisement.getPrice());
@@ -65,18 +66,15 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
         toUpdate.setRooms(advertisement.getRooms());
         toUpdate.setOwner(advertisement.getOwner());
         log.info("[MemAdvertisement - DAO] Updated advertisement ((New)Title=" + advertisement.getTitle() + ")");
-        return true;
     }
 
     @Override
-    public Boolean delete(Long id) {
-        log.info("[MemAdvertisement - DAO] Deleting advertisement... (Title=" + ENTITIES.get(id).getTitle() + ")");
-        Advertisement deleted = ENTITIES.remove(id);
+    public void delete(Advertisement adv) {
+        log.info("[MemAdvertisement - DAO] Deleting advertisement... (Title=" + ENTITIES.get(adv.getId()).getTitle() + ")");
+        Advertisement deleted = ENTITIES.remove(adv.getId());
         if (deleted == null) {
-            log.error("[MemAdvertisement - DAO] Advertisement not found! (ID=" + id + ")");
-            return false;
+            log.error("[MemAdvertisement - DAO] Advertisement not found! (ID=" + adv.getId() + ")");
         }
         log.info("[MemAdvertisement - DAO] Delete completed");
-        return true;
     }
 }

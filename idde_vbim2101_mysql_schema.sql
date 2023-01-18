@@ -3,6 +3,8 @@ USE idde_vbim2101;
 
 DROP TABLE IF EXISTS Advertisements;
 DROP TABLE IF EXISTS Owners;
+DROP TABLE IF EXISTS advertisementjpa;
+DROP TABLE IF EXISTS ownerjpa;
 
 CREATE TABLE IF NOT EXISTS Owners (
 	ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,7 +52,8 @@ INSERT INTO Advertisements VALUES(default, "Lakas3 elado", "Cim3", 70, 60, 50, 1
 
 SELECT * FROM Advertisements;
 SELECT * FROM Owners;
-
+SELECT * FROM advertisementjpa;
+SELECT * FROM ownerjpa;
 
 -- UPDATE Advertisements SET surfaceArea = 100, rooms = 2 WHERE ID IN (1,3);
 -- SELECT ROW_COUNT();
