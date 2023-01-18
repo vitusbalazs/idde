@@ -23,10 +23,12 @@ public class JdbcOwnersDao implements OwnersDao {
     private DataSource dataSource;
 
     private Owner createOwnerFromResultSet(ResultSet resultSet) throws SQLException {
+        // Collection<Advertisement> advertisements = resultSet.getString("advertisements");
         Owner owner = new Owner(
                 resultSet.getString("name"),
                 resultSet.getString("email"),
-                resultSet.getInt("age")
+                resultSet.getInt("age"),
+                null
         );
         owner.setId(resultSet.getLong("id"));
         return owner;

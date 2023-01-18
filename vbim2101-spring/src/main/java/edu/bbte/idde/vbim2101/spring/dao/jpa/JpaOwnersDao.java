@@ -17,7 +17,6 @@ public interface JpaOwnersDao extends OwnersDao, JpaRepository<Owner, Long> {
     @Modifying
     @Query("select o from Owner o where o.age=?1")
     @Transactional
+    @Override
     Collection<Owner> findByAge(Integer age);
-
-
 }

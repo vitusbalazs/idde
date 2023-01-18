@@ -49,6 +49,7 @@ public class MemOwnersDao implements OwnersDao {
         toUpdate.setName(owner.getName());
         toUpdate.setEmail(owner.getEmail());
         toUpdate.setAge(owner.getAge());
+        toUpdate.setAdvertisements(owner.getAdvertisements());
         log.info("[MemOwners - DAO] Updated owner ((New)Name=" + owner.getName() + ")");
     }
 

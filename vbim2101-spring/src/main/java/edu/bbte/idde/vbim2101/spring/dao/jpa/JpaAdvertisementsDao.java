@@ -17,5 +17,6 @@ public interface JpaAdvertisementsDao extends AdvertisementsDao, JpaRepository<A
     @Modifying
     @Query("select a from Advertisement a where a.rooms=?1")
     @Transactional
+    @Override
     Collection<Advertisement> findByRooms(Integer age);
 }

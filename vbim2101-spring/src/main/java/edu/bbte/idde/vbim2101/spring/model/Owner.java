@@ -2,8 +2,8 @@ package edu.bbte.idde.vbim2101.spring.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -17,5 +17,7 @@ public class Owner extends BaseEntity {
     private String email;
     private Integer age;
 
-    // Collection
+    @JoinColumn(name = "advertisements_id", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Collection<Advertisement> advertisements;
 }

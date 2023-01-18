@@ -48,6 +48,7 @@ public class AdvertisementsController {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         Owner owner = ownersDao.getById(advertisementInDto.getOwner());
         advertisement.setOwner(owner);
+        owner.getAdvertisements().add(advertisement);
         Long id = advertisementsDao.saveAndFlush(advertisement).getId();
         if (id == null) {
             log.error("Failed to create advertisement");

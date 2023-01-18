@@ -118,12 +118,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
-            preparedStatement.setString(1, entity.getTitle());
-            preparedStatement.setString(2, entity.getAddress());
-            preparedStatement.setInt(3, entity.getPrice());
-            preparedStatement.setInt(4, entity.getRooms());
-            preparedStatement.setInt(5, entity.getSurfaceArea());
-            preparedStatement.setLong(6, entity.getOwner().getId());
+            setParameters(entity, preparedStatement);
             preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
             Integer rowsAffected = preparedStatement.getUpdateCount();

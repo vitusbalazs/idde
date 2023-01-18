@@ -70,7 +70,7 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
 
     @Override
     public void delete(Advertisement adv) {
-        log.info("[MemAdvertisement - DAO] Deleting advertisement... (Title=" + ENTITIES.get(adv.getId()).getTitle() + ")");
+        log.info("[MemAdvertisement - DAO] Deleting advertisement...");
         Advertisement deleted = ENTITIES.remove(adv.getId());
         if (deleted == null) {
             log.error("[MemAdvertisement - DAO] Advertisement not found! (ID=" + adv.getId() + ")");

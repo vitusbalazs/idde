@@ -41,6 +41,7 @@ public class OwnersController {
 
     @PostMapping
     public String create(@RequestBody @Valid OwnerInDto ownerInDto) {
+
         Long id = ownersDao.saveAndFlush(ownersMapper.ownerFromDto(ownerInDto)).getId();
         if (id == null) {
             log.error("Failed to create owner");
