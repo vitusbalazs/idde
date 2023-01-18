@@ -68,15 +68,15 @@ public class AdvertisementsController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         advertisementsDao.delete(advertisementsDao.getById(id));
-        Boolean success = advertisementsDao.getById(id) == null;
-        if (success) {
+        // Boolean success = advertisementsDao.getById(id) == null;
+        /* if (success) {
             log.info("Deleted advertisement with id: " + id);
             return "Deleted advertisement with id: " + id;
         } else {
             log.error("Failed to delete advertisement with id: " + id);
             return "Failed to delete advertisement with id: " + id;
-        }
+        } */
     }
 }

@@ -67,15 +67,15 @@ public class OwnersController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         ownersDao.delete(ownersDao.getById(id));
-        Boolean success = ownersDao.getById(id) == null;
-        if (success) {
+        // Boolean success = ownersDao.getById(id) == null;
+        /* if (success) {
             log.info("Deleted owner with id: " + id);
             return "Deleted owner with id: " + id;
         } else {
             log.error("Failed to delete owner with id: " + id);
             return "Failed to delete owner with id: " + id;
-        }
+        } */
     }
 }

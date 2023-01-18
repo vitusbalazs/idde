@@ -2,8 +2,7 @@ package edu.bbte.idde.vbim2101.spring.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +18,7 @@ public class Advertisement extends BaseEntity {
     private Integer surfaceArea;
     private Integer rooms;
     private Long owner;
+    /*@JoinColumn(name = "owner", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Owner owner;*/
 }
