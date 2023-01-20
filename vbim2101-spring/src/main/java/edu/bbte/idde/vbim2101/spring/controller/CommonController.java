@@ -10,38 +10,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
-// findall advertisments for one owner, create, delete
-
-// findall -> meglevo owner <- osszes advertisment
-// create -> meglevo owner <- uj advertisementet
-// delete -> meglevo owner <- kitorlom advertisment
 @Slf4j
 @RestController
-@RequestMapping("/common")
+@RequestMapping("/owner")
 public class CommonController {
     @Autowired
     private OwnersDao ownersDao;
     @Autowired
     private AdvertisementsMapper advertisementsMapper;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/advertisements")
     public Collection<AdvertisementOutDto> findByOwner(@PathVariable("id") Long id) {
-        Collection<Advertisement> advertisements = new ArrayList<>();
-        for (Advertisement advertisement : ownersDao.getById(id).getAdvertisements()) {
-            if (advertisement.getOwner().getId().equals(id)) {
-                advertisements.add(advertisement);
-            }
-        }
+        log.info("[Common - Controller] Finding all advertisements by owner...");
+        Collection<Advertisement> advertisements = ownersDao.getById(id).getAdvertisements();
         if (advertisements.isEmpty()) {
             throw new NotFoundException();
         }
         return advertisementsMapper.dtosFromAdvertisements(advertisements);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/advertisement")
     public void create(@PathVariable("id") Long id, @RequestBody AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         Owner owner = ownersDao.getById(id);
@@ -50,7 +40,7 @@ public class CommonController {
         ownersDao.saveAndFlush(owner);
     }
 
-    @DeleteMapping("/{id}/{adId}")
+    @DeleteMapping("/{id}/advertisement/{adId}")
     public String delete(@PathVariable("id") Long id, @PathVariable("adId") Long id2) {
         Owner owner = ownersDao.getById(id);
         Advertisement advertisement = owner.getAdvertisements().stream().filter(adv -> adv.getId().equals(id2))

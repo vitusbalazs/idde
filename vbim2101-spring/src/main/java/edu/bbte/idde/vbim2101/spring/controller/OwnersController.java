@@ -41,14 +41,15 @@ public class OwnersController {
 
     @PostMapping
     public String create(@RequestBody @Valid OwnerInDto ownerInDto) {
+        Owner owner = ownersMapper.ownerFromDto(ownerInDto);
 
-        Long id = ownersDao.saveAndFlush(ownersMapper.ownerFromDto(ownerInDto)).getId();
-        if (id == null) {
+        Owner newOwner = ownersDao.saveAndFlush(owner);
+        if (newOwner == null) {
             log.error("Failed to create owner");
             return "Failed to create owner";
         } else {
-            log.info("Created owner with id: " + id);
-            return "Created owner with id: " + id;
+            log.info("Created owner with id: " + newOwner.getId());
+            return "Created owner with id: " + newOwner.getId();
         }
     }
 
@@ -56,6 +57,7 @@ public class OwnersController {
     public String update(@PathVariable Long id, @RequestBody @Valid OwnerInDto ownerInDto) {
         Owner owner = ownersMapper.ownerFromDto(ownerInDto);
         owner.setId(id);
+        owner.setAdvertisements(ownersDao.getById(id).getAdvertisements());
         ownersDao.saveAndFlush(owner);
         Boolean success = ownersDao.getById(id) != null;
         if (success) {
@@ -67,16 +69,9 @@ public class OwnersController {
         }
     }
 
+    // This doesn't work with JPA
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         ownersDao.delete(ownersDao.getById(id));
-        // Boolean success = ownersDao.getById(id) == null;
-        /* if (success) {
-            log.info("Deleted owner with id: " + id);
-            return "Deleted owner with id: " + id;
-        } else {
-            log.error("Failed to delete owner with id: " + id);
-            return "Failed to delete owner with id: " + id;
-        } */
     }
 }

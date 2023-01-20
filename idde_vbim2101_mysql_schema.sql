@@ -3,8 +3,6 @@ USE idde_vbim2101;
 
 DROP TABLE IF EXISTS Advertisements;
 DROP TABLE IF EXISTS Owners;
-DROP TABLE IF EXISTS advertisementjpa;
-DROP TABLE IF EXISTS ownerjpa;
 
 CREATE TABLE IF NOT EXISTS Owners (
 	ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,24 +22,6 @@ CREATE TABLE IF NOT EXISTS Advertisements  (
     FOREIGN KEY (owner) REFERENCES Owners(ID)
 );
 
-CREATE TABLE IF NOT EXISTS ownerjpa (
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(200),
-    age INT
-);
-
-CREATE TABLE IF NOT EXISTS advertisementjpa  (
-	ID INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(100),
-    address VARCHAR(200),
-    price INT,
-    surfaceArea INT,
-    rooms INT,
-    owner_id INT,
-    FOREIGN KEY (owner_id) REFERENCES ownerjpa(ID)
-);
-
 INSERT INTO Owners VALUES(default, "Jakab Sarolta", "jgysarolta@gmail.com", 20);
 INSERT INTO Owners VALUES(default, "Vitus Balazs", "vitusbalazs01@yahoo.com", 21);
 INSERT INTO Owners VALUES(default, "Galambos Lajos", "lagzi@lajcsi.hu", 61);
@@ -52,8 +32,6 @@ INSERT INTO Advertisements VALUES(default, "Lakas3 elado", "Cim3", 70, 60, 50, 1
 
 SELECT * FROM Advertisements;
 SELECT * FROM Owners;
-SELECT * FROM advertisementjpa;
-SELECT * FROM ownerjpa;
 
 -- UPDATE Advertisements SET surfaceArea = 100, rooms = 2 WHERE ID IN (1,3);
 -- SELECT ROW_COUNT();

@@ -28,11 +28,13 @@ public class MemOwnersDao implements OwnersDao {
 
     @Override
     public Owner saveAndFlush(Owner owner) {
+        if (owner.getId() == null) {
+            owner.setId(ID_GENERATOR.incrementAndGet());
+        }
         if (ENTITIES.containsKey(owner.getId())) {
             update(owner.getId(), owner);
             log.info("[MemOwners - DAO] Updated owner (Name=" + owner.getName() + ")");
         } else {
-            owner.setId(ID_GENERATOR.incrementAndGet());
             ENTITIES.put(owner.getId(), owner);
             log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");
         }

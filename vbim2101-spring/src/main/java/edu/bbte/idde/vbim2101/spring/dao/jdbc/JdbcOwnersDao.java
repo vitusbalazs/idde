@@ -80,46 +80,36 @@ public class JdbcOwnersDao implements OwnersDao {
     public Owner saveAndFlush(Owner entity) {
         Long id = entity.getId();
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners "
-                    + "WHERE id=?");
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                update(entity.getId(), entity);
-            } else {
-                PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO Owners "
-                        + "VALUES (default, ?, ?, ?)");
-                setParameters(entity, preparedStatement2);
-                preparedStatement2.executeUpdate();
-                preparedStatement2 = connection.prepareStatement("SELECT LAST_INSERT_ID()");
-                ResultSet resultSet2 = preparedStatement2.executeQuery();
-                if (resultSet2.next()) {
-                    id = resultSet2.getLong(1);
+            PreparedStatement preparedStatement;
+            if (id == null) {
+                preparedStatement = connection.prepareStatement("INSERT INTO Owners (name, email, age) "
+                        + "VALUES (?, ?, ?)");
+                setParameters(entity, preparedStatement);
+                preparedStatement.executeUpdate();
+                preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    id = resultSet.getLong(1);
                 }
-                log.info("[Owners - SQL] Create successful");
+                log.info("[Owners - SQL] Insert successful");
+            } else {
+                preparedStatement = connection.prepareStatement("UPDATE Owners SET name=?, email=?, age=? "
+                        + "WHERE id=?");
+                setParameters(entity, preparedStatement);
+                preparedStatement.setLong(4, id);
+                preparedStatement.executeUpdate();
+                Integer rows = preparedStatement.getUpdateCount();
+                if (rows == 0) {
+                    log.error("[Owners - SQL] Update failed... ");
+                    return null;
+                }
+                log.info("[Owners - SQL] Update successful");
             }
 
         } catch (SQLException e) {
             log.error("[Owners - SQL] Create failed... ", e);
         }
         return getById(id);
-    }
-
-    public void update(Long id, Owner entity) {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Owners "
-                    + "SET name=?, address=?, rating=? WHERE id=?");
-            setParameters(entity, preparedStatement);
-            preparedStatement.setLong(4, id);
-            preparedStatement.executeUpdate();
-            Integer rowsAffected = preparedStatement.getUpdateCount();
-            if (rowsAffected == 1) {
-                log.info("[Owners - SQL] Update successful");
-            }
-            log.error("[Owners - SQL] Update unsuccessful");
-        } catch (SQLException e) {
-            log.error("[Owners - SQL] Update failed... ", e);
-        }
     }
 
     @Override

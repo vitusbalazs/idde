@@ -48,14 +48,14 @@ public class AdvertisementsController {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         Owner owner = ownersDao.getById(advertisementInDto.getOwner());
         advertisement.setOwner(owner);
-        owner.getAdvertisements().add(advertisement);
-        Long id = advertisementsDao.saveAndFlush(advertisement).getId();
-        if (id == null) {
+
+        Advertisement newAdvertisement = advertisementsDao.saveAndFlush(advertisement);
+        if (newAdvertisement == null) {
             log.error("Failed to create advertisement");
             return "Failed to create advertisement";
         } else {
-            log.info("Created advertisement with id: " + id);
-            return "Created advertisement with id: " + id;
+            log.info("Created advertisement with id: " + newAdvertisement.getId());
+            return "Created advertisement with id: " + newAdvertisement.getId();
         }
     }
 
@@ -65,27 +65,11 @@ public class AdvertisementsController {
         advertisement.setId(id);
         advertisement.setOwner(ownersDao.getById(advertisementInDto.getOwner()));
         advertisementsDao.saveAndFlush(advertisement);
-        Boolean success = advertisementsDao.getById(id) != null;
-        if (success) {
-            log.info("Updated advertisement with id: " + id);
-            return "Updated advertisement with id: " + id;
-
-        } else {
-            log.error("Failed to update advertisement with id: " + id);
-            return "Failed to update advertisement with id: " + id;
-        }
+        return "Update done";
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         advertisementsDao.delete(advertisementsDao.getById(id));
-        // Boolean success = advertisementsDao.getById(id) == null;
-        /* if (success) {
-            log.info("Deleted advertisement with id: " + id);
-            return "Deleted advertisement with id: " + id;
-        } else {
-            log.error("Failed to delete advertisement with id: " + id);
-            return "Failed to delete advertisement with id: " + id;
-        } */
     }
 }

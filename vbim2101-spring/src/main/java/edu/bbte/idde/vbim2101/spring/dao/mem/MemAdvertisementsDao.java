@@ -45,11 +45,13 @@ public class MemAdvertisementsDao implements AdvertisementsDao {
 
     @Override
     public Advertisement saveAndFlush(Advertisement advertisement) {
+        if (advertisement.getId() == null) {
+            advertisement.setId(ID_GENERATOR.incrementAndGet());
+        }
         if (ENTITIES.containsKey(advertisement.getId())) {
             update(advertisement.getId(), advertisement);
             log.info("[MemAdvertisement - DAO] Updated advertisement (Title=" + advertisement.getTitle() + ")");
         } else {
-            advertisement.setId(ID_GENERATOR.incrementAndGet());
             ENTITIES.put(advertisement.getId(), advertisement);
             log.info("[MemAdvertisement - DAO] Added new advertisement (Title=" + advertisement.getTitle() + ")");
         }
