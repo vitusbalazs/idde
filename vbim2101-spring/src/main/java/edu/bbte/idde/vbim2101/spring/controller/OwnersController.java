@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @RestController
 @RequestMapping("/owners")
-@Slf4j
 public class OwnersController {
     @Autowired
     private OwnersDao ownersDao;
@@ -32,7 +32,7 @@ public class OwnersController {
 
     @GetMapping("/{id}")
     public OwnerOutDto findById(@PathVariable("id") Long id) {
-        Owner result = ownersDao.findById(id);
+        Owner result = ownersDao.getById(id);
         if (result == null) {
             throw new NotFoundException();
         }
@@ -41,13 +41,15 @@ public class OwnersController {
 
     @PostMapping
     public String create(@RequestBody @Valid OwnerInDto ownerInDto) {
-        Long id = ownersDao.create(ownersMapper.ownerFromDto(ownerInDto));
-        if (id == null) {
+        Owner owner = ownersMapper.ownerFromDto(ownerInDto);
+
+        Owner newOwner = ownersDao.saveAndFlush(owner);
+        if (newOwner == null) {
             log.error("Failed to create owner");
             return "Failed to create owner";
         } else {
-            log.info("Created owner with id: " + id);
-            return "Created owner with id: " + id;
+            log.info("Created owner with id: " + newOwner.getId());
+            return "Created owner with id: " + newOwner.getId();
         }
     }
 
@@ -55,7 +57,9 @@ public class OwnersController {
     public String update(@PathVariable Long id, @RequestBody @Valid OwnerInDto ownerInDto) {
         Owner owner = ownersMapper.ownerFromDto(ownerInDto);
         owner.setId(id);
-        Boolean success = ownersDao.update(id, owner);
+        owner.setAdvertisements(ownersDao.getById(id).getAdvertisements());
+        ownersDao.saveAndFlush(owner);
+        Boolean success = ownersDao.getById(id) != null;
         if (success) {
             log.info("Updated owner with id: " + id);
             return "Updated owner with id: " + id;
@@ -65,15 +69,9 @@ public class OwnersController {
         }
     }
 
+    // This doesn't work with JPA
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        Boolean success = ownersDao.delete(id);
-        if (success) {
-            log.info("Deleted owner with id: " + id);
-            return "Deleted owner with id: " + id;
-        } else {
-            log.error("Failed to delete owner with id: " + id);
-            return "Failed to delete owner with id: " + id;
-        }
+    public void delete(@PathVariable Long id) {
+        ownersDao.delete(ownersDao.getById(id));
     }
 }

@@ -10,5 +10,5 @@ public class AdvertisementOutDto {
     private Integer price;
     private Integer surfaceArea;
     private Integer rooms;
-    private Long owner;
+    private OwnerOutDto owner;
 }

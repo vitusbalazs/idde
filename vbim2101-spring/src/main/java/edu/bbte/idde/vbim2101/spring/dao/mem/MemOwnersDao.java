@@ -21,43 +21,48 @@ public class MemOwnersDao implements OwnersDao {
     private static final AtomicLong ID_GENERATOR = new AtomicLong();
 
     @Override
-    public Owner findById(Long id) {
+    public Owner getById(Long id) {
         log.info("[MemOwners - DAO] Finding owner by id...");
         return ENTITIES.get(id);
     }
 
     @Override
-    public Long create(Owner owner) {
-        Long id = ID_GENERATOR.incrementAndGet();
-        owner.setId(id);
-        ENTITIES.put(id, owner);
-        log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");
-        return id;
+    public Owner saveAndFlush(Owner owner) {
+        if (owner.getId() == null) {
+            owner.setId(ID_GENERATOR.incrementAndGet());
+        }
+        if (ENTITIES.containsKey(owner.getId())) {
+            update(owner.getId(), owner);
+            log.info("[MemOwners - DAO] Updated owner (Name=" + owner.getName() + ")");
+        } else {
+            ENTITIES.put(owner.getId(), owner);
+            log.info("[MemOwners - DAO] Added new owner (Name=" + owner.getName() + ")");
+        }
+
+        return ENTITIES.get(owner.getId());
     }
 
-    @Override
-    public Boolean update(Long id, Owner owner) {
-        Owner toUpdate = this.findById(id);
+    public void update(Long id, Owner owner) {
+        Owner toUpdate = this.getById(id);
         if (Objects.isNull(toUpdate)) {
-            return false;
+            log.error("[MemOwners - DAO] Owner not found");
+            return;
         }
         toUpdate.setName(owner.getName());
         toUpdate.setEmail(owner.getEmail());
         toUpdate.setAge(owner.getAge());
+        toUpdate.setAdvertisements(owner.getAdvertisements());
         log.info("[MemOwners - DAO] Updated owner ((New)Name=" + owner.getName() + ")");
-        return true;
     }
 
     @Override
-    public Boolean delete(Long id) {
-        log.info("[MemOwners - DAO] Deleting owner... (Title=" + ENTITIES.get(id).getName() + ")");
-        Owner deleted = ENTITIES.remove(id);
+    public void delete(Owner owner) {
+        log.info("[MemOwners - DAO] Deleting owner... (Title=" + ENTITIES.get(owner.getId()).getName() + ")");
+        Owner deleted = ENTITIES.remove(owner.getId());
         if (deleted == null) {
-            log.error("[MemOwners - DAO] Owner not found! (ID=" + id + ")");
-            return false;
+            log.error("[MemOwners - DAO] Owner not found! (ID=" + owner.getId() + ")");
         }
         log.info("[MemOwners - DAO] Delete completed");
-        return true;
     }
 
     @Override

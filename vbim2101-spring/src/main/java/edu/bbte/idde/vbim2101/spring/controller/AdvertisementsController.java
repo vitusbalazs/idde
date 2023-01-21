@@ -1,10 +1,12 @@
 package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.AdvertisementsDao;
+import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import edu.bbte.idde.vbim2101.spring.controller.mapper.AdvertisementsMapper;
 import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementInDto;
 import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementOutDto;
+import edu.bbte.idde.vbim2101.spring.model.Owner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 
+@Slf4j
 @RestController
 @RequestMapping("/advertisements")
-@Slf4j
 public class AdvertisementsController {
     @Autowired
     private AdvertisementsDao advertisementsDao;
     @Autowired
     private AdvertisementsMapper advertisementsMapper;
+    @Autowired
+    private OwnersDao ownersDao;
 
     @GetMapping
     public Collection<AdvertisementOutDto> findAll(@RequestParam(required = false) Integer rooms) {
@@ -32,7 +36,7 @@ public class AdvertisementsController {
 
     @GetMapping("/{id}")
     public AdvertisementOutDto findById(@PathVariable("id") Long id) {
-        Advertisement result = advertisementsDao.findById(id);
+        Advertisement result = advertisementsDao.getById(id);
         if (result == null) {
             throw new NotFoundException();
         }
@@ -41,13 +45,17 @@ public class AdvertisementsController {
 
     @PostMapping
     public String create(@RequestBody @Valid AdvertisementInDto advertisementInDto) {
-        Long id = advertisementsDao.create(advertisementsMapper.advertisementFromDto(advertisementInDto));
-        if (id == null) {
+        Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
+        Owner owner = ownersDao.getById(advertisementInDto.getOwner());
+        advertisement.setOwner(owner);
+
+        Advertisement newAdvertisement = advertisementsDao.saveAndFlush(advertisement);
+        if (newAdvertisement == null) {
             log.error("Failed to create advertisement");
             return "Failed to create advertisement";
         } else {
-            log.info("Created advertisement with id: " + id);
-            return "Created advertisement with id: " + id;
+            log.info("Created advertisement with id: " + newAdvertisement.getId());
+            return "Created advertisement with id: " + newAdvertisement.getId();
         }
     }
 
@@ -55,26 +63,13 @@ public class AdvertisementsController {
     public String update(@PathVariable Long id, @RequestBody @Valid AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         advertisement.setId(id);
-        Boolean success = advertisementsDao.update(id, advertisement);
-        if (success) {
-            log.info("Updated advertisement with id: " + id);
-            return "Updated advertisement with id: " + id;
-
-        } else {
-            log.error("Failed to update advertisement with id: " + id);
-            return "Failed to update advertisement with id: " + id;
-        }
+        advertisement.setOwner(ownersDao.getById(advertisementInDto.getOwner()));
+        advertisementsDao.saveAndFlush(advertisement);
+        return "Update done";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        Boolean success = advertisementsDao.delete(id);
-        if (success) {
-            log.info("Deleted advertisement with id: " + id);
-            return "Deleted advertisement with id: " + id;
-        } else {
-            log.error("Failed to delete advertisement with id: " + id);
-            return "Failed to delete advertisement with id: " + id;
-        }
+    public void delete(@PathVariable Long id) {
+        advertisementsDao.delete(advertisementsDao.getById(id));
     }
 }

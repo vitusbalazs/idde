@@ -7,11 +7,9 @@ import java.util.Collection;
 public interface Dao<T extends BaseEntity> {
     Collection<T> findAll();
 
-    T findById(Long id);
+    T getById(Long id);
 
-    Long create(T entity);
+    T saveAndFlush(T entity);
 
-    Boolean update(Long id, T entity);
-
-    Boolean delete(Long id);
+    void delete(T entity);
 }

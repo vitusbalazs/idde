@@ -1,6 +1,7 @@
 package edu.bbte.idde.vbim2101.spring.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.spring.dao.AdvertisementsDao;
+import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
 import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import java.util.Collection;
 public class JdbcAdvertisementsDao implements AdvertisementsDao {
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private OwnersDao ownersDao;
 
     private Advertisement createAdvertisementFromResultSet(ResultSet resultSet) throws SQLException {
         Advertisement advertisement;
@@ -30,7 +33,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
                 resultSet.getInt("price"),
                 resultSet.getInt("surfaceArea"),
                 resultSet.getInt("rooms"),
-                resultSet.getLong("owner")
+                ownersDao.getById(resultSet.getLong("owner"))
         );
         advertisement.setId(resultSet.getLong("id"));
         return advertisement;
@@ -44,7 +47,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
         preparedStatement.setInt(3, advertisement.getPrice());
         preparedStatement.setInt(4, advertisement.getSurfaceArea());
         preparedStatement.setInt(5, advertisement.getRooms());
-        preparedStatement.setLong(6, advertisement.getOwner());
+        preparedStatement.setLong(6, advertisement.getOwner().getId());
     }
 
     @Override
@@ -65,7 +68,7 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public Advertisement findById(Long id) {
+    public Advertisement getById(Long id) {
         //String query = "SELECT * FROM Book WHERE Id = ?";
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements "
@@ -83,50 +86,53 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
     }
 
     @Override
-    public Long create(Advertisement entity) {
-        Long id = null;
+    public Advertisement saveAndFlush(Advertisement entity) {
+        Long id = entity.getId();
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
-                    + "VALUES (default, ?, ?, ?, ?, ?, ?)");
-            setParameters(entity, preparedStatement);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                id = resultSet.getLong(1);
-            }
-            log.info("[Advertisements - SQL] Create successful");
-        } catch (SQLException e) {
-            log.error("[Advertisements - SQL] Create failed... ", e);
-        }
-        return id;
-    }
-
-    @Override
-    public Boolean update(Long id, Advertisement entity) {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
-                    + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
-            setParameters(entity, preparedStatement);
-            preparedStatement.setLong(7, id);
-            preparedStatement.executeUpdate();
-            Integer rowsAffected = preparedStatement.getUpdateCount();
-            if (rowsAffected == 1) {
+            log.info("Save and flush started");
+            PreparedStatement preparedStatement;
+            if (id == null) {
+                log.info("No id, insert");
+                preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
+                        + "(title, address, price, surfaceArea, rooms, owner) "
+                        + "VALUES (?, ?, ?, ?, ?, ?)");
+                setParameters(entity, preparedStatement);
+                log.info("Parameters set");
+                preparedStatement.executeUpdate();
+                log.info("Update executed");
+                preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID()");
+                log.info("Last insert id selected");
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    id = resultSet.getLong(1);
+                    log.info("Id set");
+                }
+                log.info("[Advertisements - SQL] Insert successful");
+            } else {
+                preparedStatement = connection.prepareStatement("UPDATE Advertisements "
+                        + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? "
+                        + "WHERE id=?");
+                setParameters(entity, preparedStatement);
+                preparedStatement.setLong(7, id);
+                preparedStatement.executeUpdate();
+                Integer rows = preparedStatement.getUpdateCount();
+                if (rows == 0) {
+                    log.error("[Advertisements - SQL] Update failed... ");
+                    return null;
+                }
                 log.info("[Advertisements - SQL] Update successful");
-                return true;
             }
-            log.error("[Advertisements - SQL] Update unsuccessful");
         } catch (SQLException e) {
-            log.error("[Advertisements - SQL] Update failed... ", e);
+            log.error("[Advertisements - SQL] Save failed... ", e);
         }
-        return false;
+        return getById(id);
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public void delete(Advertisement adv) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Advertisements WHERE id=?");
-            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(1, adv.getId());
             preparedStatement.executeUpdate();
             Integer rowCount = 0;
             preparedStatement = connection.prepareStatement("SELECT ROW_COUNT()");
@@ -136,13 +142,12 @@ public class JdbcAdvertisementsDao implements AdvertisementsDao {
             }
             if (rowCount == 1) {
                 log.info("[Advertisements - SQL] Delete successful");
-                return true;
+                return;
             }
             log.error("[Advertisements - SQL] Delete unsuccessful");
         } catch (SQLException e) {
             log.error("[Advertisements - SQL] Delete failed... ", e);
         }
-        return false;
     }
 
     @Override
