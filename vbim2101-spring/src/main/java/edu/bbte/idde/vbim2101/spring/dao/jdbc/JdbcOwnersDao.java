@@ -1,6 +1,7 @@
 package edu.bbte.idde.vbim2101.spring.dao.jdbc;
 
 import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
+import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import edu.bbte.idde.vbim2101.spring.model.Owner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class JdbcOwnersDao implements OwnersDao {
                 resultSet.getString("name"),
                 resultSet.getString("email"),
                 resultSet.getInt("age"),
-                null
+                new ArrayList<>()
         );
         owner.setId(resultSet.getLong("id"));
         return owner;

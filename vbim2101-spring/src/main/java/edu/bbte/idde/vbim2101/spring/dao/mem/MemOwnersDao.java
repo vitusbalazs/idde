@@ -30,6 +30,7 @@ public class MemOwnersDao implements OwnersDao {
     public Owner saveAndFlush(Owner owner) {
         if (owner.getId() == null) {
             owner.setId(ID_GENERATOR.incrementAndGet());
+            owner.setAdvertisements(new ArrayList<>());
         }
         if (ENTITIES.containsKey(owner.getId())) {
             update(owner.getId(), owner);
