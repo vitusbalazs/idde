@@ -28,7 +28,7 @@ public class JdbcOwnersDao implements OwnersDao {
                 resultSet.getString("name"),
                 resultSet.getString("email"),
                 resultSet.getInt("age"),
-                null
+                new ArrayList<>()
         );
         owner.setId(resultSet.getLong("id"));
         return owner;

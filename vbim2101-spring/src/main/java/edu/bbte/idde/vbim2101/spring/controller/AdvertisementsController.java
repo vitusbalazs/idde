@@ -47,6 +47,7 @@ public class AdvertisementsController {
     public String create(@RequestBody @Valid AdvertisementInDto advertisementInDto) {
         Advertisement advertisement = advertisementsMapper.advertisementFromDto(advertisementInDto);
         Owner owner = ownersDao.getById(advertisementInDto.getOwner());
+        owner.getAdvertisements().add(advertisement);
         advertisement.setOwner(owner);
 
         Advertisement newAdvertisement = advertisementsDao.saveAndFlush(advertisement);
