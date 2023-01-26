@@ -17,7 +17,6 @@ public class Owner extends BaseEntity {
     private String email;
     private Integer age;
 
-    @JoinColumn(name = "advertisements_id", nullable = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "owner")
     private Collection<Advertisement> advertisements;
 }
