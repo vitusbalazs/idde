@@ -1,7 +1,7 @@
 package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.QueryDao;
-import edu.bbte.idde.vbim2101.spring.model.Query;
+import edu.bbte.idde.vbim2101.spring.model.Queries;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +20,8 @@ public class SearchController {
     private QueryDao queryDao;
 
     @GetMapping
-    public Collection<Query> getQueriesBetweenTimestamps(@RequestParam Timestamp mini,
-            @RequestParam Timestamp maxi) {
+    public Collection<Queries> getQueriesBetweenTimestamps(@RequestParam Timestamp mini,
+                                                           @RequestParam Timestamp maxi) {
 
         return queryDao.findBetweenTimestamps(mini, maxi);
     }

@@ -1,7 +1,7 @@
 package edu.bbte.idde.vbim2101.spring.dao.mem;
 
 import edu.bbte.idde.vbim2101.spring.dao.QueryDao;
-import edu.bbte.idde.vbim2101.spring.model.Query;
+import edu.bbte.idde.vbim2101.spring.model.Queries;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -9,27 +9,27 @@ import java.util.Collection;
 
 public class MemQueryDao implements QueryDao {
     @Override
-    public Collection<Query> findAll() {
+    public Collection<Queries> findAll() {
         return new ArrayList<>();
     }
 
     @Override
-    public Query getById(Long id) {
+    public Queries getById(Long id) {
         return null;
     }
 
     @Override
-    public Query saveAndFlush(Query entity) {
+    public Queries saveAndFlush(Queries entity) {
         return null;
     }
 
     @Override
-    public void delete(Query entity) {
+    public void delete(Queries entity) {
 
     }
 
     @Override
-    public Collection<Query> findBetweenTimestamps(Timestamp mini, Timestamp maxi) {
+    public Collection<Queries> findBetweenTimestamps(Timestamp mini, Timestamp maxi) {
         return new ArrayList<>();
     }
 }

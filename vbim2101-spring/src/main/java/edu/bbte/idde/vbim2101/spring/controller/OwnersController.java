@@ -1,15 +1,19 @@
 package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
+import edu.bbte.idde.vbim2101.spring.dao.QueryDao;
 import edu.bbte.idde.vbim2101.spring.model.Owner;
 import edu.bbte.idde.vbim2101.spring.controller.mapper.OwnersMapper;
 import edu.bbte.idde.vbim2101.spring.controller.dto.OwnerInDto;
 import edu.bbte.idde.vbim2101.spring.controller.dto.OwnerOutDto;
+import edu.bbte.idde.vbim2101.spring.model.Queries;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 
 @Slf4j
@@ -19,14 +23,18 @@ public class OwnersController {
     @Autowired
     private OwnersDao ownersDao;
     @Autowired
+    private QueryDao queryDao;
+    @Autowired
     private OwnersMapper ownersMapper;
 
     @GetMapping
     public Collection<OwnerOutDto> findAll(@RequestParam(required = false) Integer age) {
         if (age == null) {
+            queryDao.saveAndFlush(new Queries("Find all owners", Timestamp.from(Instant.now())));
             return ownersMapper.dtosFromOwners(ownersDao.findAll());
         }
         Collection<Owner> owners = ownersDao.findByAge(age);
+        queryDao.saveAndFlush(new Queries("Find Owners with " + age + " age", Timestamp.from(Instant.now())));
         return ownersMapper.dtosFromOwners(owners);
     }
 
@@ -36,6 +44,7 @@ public class OwnersController {
         if (result == null) {
             throw new NotFoundException();
         }
+        queryDao.saveAndFlush(new Queries("Find by id owner", Timestamp.from(Instant.now())));
         return ownersMapper.dtoFromOwner(result);
     }
 

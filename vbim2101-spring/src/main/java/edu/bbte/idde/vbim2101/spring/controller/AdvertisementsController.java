@@ -2,16 +2,20 @@ package edu.bbte.idde.vbim2101.spring.controller;
 
 import edu.bbte.idde.vbim2101.spring.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.spring.dao.OwnersDao;
+import edu.bbte.idde.vbim2101.spring.dao.QueryDao;
 import edu.bbte.idde.vbim2101.spring.model.Advertisement;
 import edu.bbte.idde.vbim2101.spring.controller.mapper.AdvertisementsMapper;
 import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementInDto;
 import edu.bbte.idde.vbim2101.spring.controller.dto.AdvertisementOutDto;
 import edu.bbte.idde.vbim2101.spring.model.Owner;
+import edu.bbte.idde.vbim2101.spring.model.Queries;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 
 @Slf4j
@@ -23,14 +27,19 @@ public class AdvertisementsController {
     @Autowired
     private AdvertisementsMapper advertisementsMapper;
     @Autowired
+    private QueryDao queryDao;
+    @Autowired
     private OwnersDao ownersDao;
 
     @GetMapping
     public Collection<AdvertisementOutDto> findAll(@RequestParam(required = false) Integer rooms) {
         if (rooms == null) {
+            queryDao.saveAndFlush(new Queries("Find all advertisements", Timestamp.from(Instant.now())));
             return advertisementsMapper.dtosFromAdvertisements(advertisementsDao.findAll());
         }
         Collection<Advertisement> advertisements = advertisementsDao.findByRooms(rooms);
+        queryDao.saveAndFlush(new Queries("Find advertisements with"
+                + rooms + " rooms", Timestamp.from(Instant.now())));
         return advertisementsMapper.dtosFromAdvertisements(advertisements);
     }
 
@@ -40,6 +49,7 @@ public class AdvertisementsController {
         if (result == null) {
             throw new NotFoundException();
         }
+        queryDao.saveAndFlush(new Queries("Find advertisement by id", Timestamp.from(Instant.now())));
         return advertisementsMapper.dtoFromAdvertisement(result);
     }
 

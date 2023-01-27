@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "queryjpa")
-public class Query extends BaseEntity {
+public class Queries extends BaseEntity {
     private String queryString;
     private Timestamp date;
 }
