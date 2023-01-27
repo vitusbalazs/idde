@@ -114,16 +114,11 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
 
     @Override
     public void update(Long id, Advertisement entity) {
-        log.info("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEE");
         try (Connection connection = dataSource.getConnection()) {
-            log.info("Update1");
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
                     + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=?, version=? WHERE id=?");
-            log.info("Update2");
             setParameters(entity, preparedStatement);
-            log.info("Update3");
             Integer newVersion = entity.getVersion() + 1;
-            log.info(newVersion.toString());
             preparedStatement.setInt(7, newVersion);
             preparedStatement.setLong(8, id);
             preparedStatement.executeUpdate();

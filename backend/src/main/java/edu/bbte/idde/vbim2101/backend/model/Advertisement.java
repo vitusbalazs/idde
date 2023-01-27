@@ -20,7 +20,8 @@ public class Advertisement extends BaseEntity {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer version;
 
-    public Advertisement(String title, String address, Integer price, Integer surfaceArea, Integer rooms, Long owner, Integer version) {
+    public Advertisement(String title, String address, Integer price, Integer surfaceArea,
+            Integer rooms, Long owner, Integer version) {
         super();
         this.title = title;
         this.address = address;
