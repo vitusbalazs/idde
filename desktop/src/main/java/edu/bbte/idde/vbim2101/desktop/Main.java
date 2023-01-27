@@ -25,7 +25,7 @@ public class Main {
 
         LOG.info("-------------- Advertisements --------------");
         AdvertisementsDao adDao = abstractDaoFactory.getAdvertisementDao();
-        adDao.create(new Advertisement("monostori elado", "monostor", 15, 1, 2, 1L));
+        adDao.create(new Advertisement("monostori elado", "monostor", 15, 1, 2, 1L, 1));
         Collection<Advertisement> lista = adDao.findAll();
         for (Advertisement i : lista) {
             LOG.info("{}: {}", i.getId(), i);

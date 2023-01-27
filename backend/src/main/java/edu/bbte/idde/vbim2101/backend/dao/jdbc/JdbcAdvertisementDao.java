@@ -1,5 +1,7 @@
 package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
+import edu.bbte.idde.vbim2101.backend.config.Config;
+import edu.bbte.idde.vbim2101.backend.config.ConfigFactory;
 import edu.bbte.idde.vbim2101.backend.dao.AdvertisementsDao;
 import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,8 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
                 resultSet.getInt("price"),
                 resultSet.getInt("surfaceArea"),
                 resultSet.getInt("rooms"),
-                resultSet.getLong("owner")
+                resultSet.getLong("owner"),
+                resultSet.getInt("version")
         );
         advertisement.setId(resultSet.getLong("id"));
         return advertisement;
@@ -45,13 +48,21 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
 
     @Override
     public Collection<Advertisement> findAll() {
+        Config config = ConfigFactory.getConfig();
+        Boolean showVersion = config.getShowVersion();
         Collection<Advertisement> advertisements = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Advertisement advertisement = createAdvertisementFromResultSet(resultSet);
-                advertisements.add(advertisement);
+                if (showVersion) {
+                    advertisements.add(advertisement);
+                } else {
+                    advertisement.setVersion(null);
+                    advertisements.add(advertisement);
+                }
+
             }
             log.info("[Advertisements - SQL] Find all successful");
         } catch (SQLException e) {
@@ -62,6 +73,8 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
 
     @Override
     public Advertisement findById(Long id) {
+        Config config = ConfigFactory.getConfig();
+        Boolean showVersion = config.getShowVersion();
         //String query = "SELECT * FROM Book WHERE Id = ?";
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Advertisements "
@@ -69,7 +82,14 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return createAdvertisementFromResultSet(resultSet);
+                if (showVersion) {
+                    return createAdvertisementFromResultSet(resultSet);
+                } else {
+                    Advertisement advertisement = createAdvertisementFromResultSet(resultSet);
+                    advertisement.setVersion(null);
+                    return advertisement;
+                }
+
             }
             log.info("[Advertisements - SQL] Find by id successful");
         } catch (SQLException e) {
@@ -82,8 +102,9 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
     public void create(Advertisement entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Advertisements "
-                    + "VALUES (default, ?, ?, ?, ?, ?, ?)");
+                    + "VALUES (default, ?, ?, ?, ?, ?, ?, ?)");
             setParameters(entity, preparedStatement);
+            preparedStatement.setInt(7, entity.getVersion());
             preparedStatement.executeUpdate();
             log.info("[Advertisements - SQL] Create successful");
         } catch (SQLException e) {
@@ -93,11 +114,18 @@ public class JdbcAdvertisementDao implements AdvertisementsDao {
 
     @Override
     public void update(Long id, Advertisement entity) {
+        log.info("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEE");
         try (Connection connection = dataSource.getConnection()) {
+            log.info("Update1");
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Advertisements "
-                    + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=? WHERE id=?");
+                    + "SET title=?, address=?, price=?, surfaceArea=?, rooms=?, owner=?, version=? WHERE id=?");
+            log.info("Update2");
             setParameters(entity, preparedStatement);
-            preparedStatement.setLong(7, id);
+            log.info("Update3");
+            Integer newVersion = entity.getVersion() + 1;
+            log.info(newVersion.toString());
+            preparedStatement.setInt(7, newVersion);
+            preparedStatement.setLong(8, id);
             preparedStatement.executeUpdate();
             log.info("[Advertisements - SQL] Update successful");
         } catch (SQLException e) {

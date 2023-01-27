@@ -13,6 +13,7 @@ public class Config {
     private String password;
     private Integer poolsize;
     private String jdbcDriver;
+    private Boolean showVersion;
 
     public Config() {
         daoType = "mem";

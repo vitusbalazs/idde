@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 
 @WebServlet("/advertisements")
 public class AdvertisementsServlet extends HttpServlet {
@@ -67,6 +68,7 @@ public class AdvertisementsServlet extends HttpServlet {
         LOGGER.info("POST /advertisements arrived...");
         try {
             Advertisement data = objectMapper.readValue(req.getReader(), Advertisement.class);
+            data.setVersion(1);
             if (data.getTitle() == null || data.getAddress() == null || data.getPrice() == null
                     || data.getSurfaceArea() == null || data.getRooms() == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -80,7 +82,7 @@ public class AdvertisementsServlet extends HttpServlet {
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST)");
-            LOGGER.info("POST /advertisements failed");
+            LOGGER.info("POST /advertisements failed " + e);
         }
     }
 
@@ -121,6 +123,7 @@ public class AdvertisementsServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
                 } else {
+                    data.setVersion(advertisementsDao.findById(advID).getVersion());
                     advertisementsDao.update(advID, data);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().println("PUT completed successfully!");
@@ -129,7 +132,7 @@ public class AdvertisementsServlet extends HttpServlet {
         } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().println("Something went wrong with your PUT request on /advertisements endpoint.");
-            LOGGER.info("PUT /advertisements failed");
+            LOGGER.info("PUT /advertisements failed: " + e);
         }
         LOGGER.info("PUT /advertisements ended");
     }

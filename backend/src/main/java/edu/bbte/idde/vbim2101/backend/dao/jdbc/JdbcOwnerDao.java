@@ -1,6 +1,9 @@
 package edu.bbte.idde.vbim2101.backend.dao.jdbc;
 
+import edu.bbte.idde.vbim2101.backend.config.Config;
+import edu.bbte.idde.vbim2101.backend.config.ConfigFactory;
 import edu.bbte.idde.vbim2101.backend.dao.OwnersDao;
+import edu.bbte.idde.vbim2101.backend.model.Advertisement;
 import edu.bbte.idde.vbim2101.backend.model.Owner;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +28,8 @@ public class JdbcOwnerDao implements OwnersDao {
         Owner owner = new Owner(
                 resultSet.getString("name"),
                 resultSet.getString("email"),
-                resultSet.getInt("age")
+                resultSet.getInt("age"),
+                resultSet.getInt("version")
         );
         owner.setId(resultSet.getLong("id"));
         return owner;
@@ -37,17 +41,25 @@ public class JdbcOwnerDao implements OwnersDao {
         preparedStatement.setString(1, owner.getName());
         preparedStatement.setString(2, owner.getEmail());
         preparedStatement.setInt(3, owner.getAge());
+        preparedStatement.setInt(4, owner.getVersion());
     }
 
     @Override
     public Collection<Owner> findAll() {
+        Config config = ConfigFactory.getConfig();
+        Boolean showVersion = config.getShowVersion();
         Collection<Owner> owners = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Owner owner = createOwnerFromResultSet(resultSet);
-                owners.add(owner);
+                if (showVersion) {
+                    owners.add(owner);
+                } else {
+                    owner.setVersion(null);
+                    owners.add(owner);
+                }
             }
             log.info("[Owners - SQL] Find all successful");
         } catch (SQLException e) {
@@ -58,13 +70,22 @@ public class JdbcOwnerDao implements OwnersDao {
 
     @Override
     public Owner findById(Long id) {
+        Config config = ConfigFactory.getConfig();
+        Boolean showVersion = config.getShowVersion();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Owners "
                     + "WHERE id=?");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return createOwnerFromResultSet(resultSet);
+                if (showVersion) {
+                    return createOwnerFromResultSet(resultSet);
+                } else {
+                    Owner owner = createOwnerFromResultSet(resultSet);
+                    owner.setVersion(null);
+                    return owner;
+                }
+
             }
             log.info("[Owners - SQL] Find by id successful");
         } catch (SQLException e) {
@@ -77,7 +98,7 @@ public class JdbcOwnerDao implements OwnersDao {
     public void create(Owner entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Owners "
-                    + "VALUES (default, ?, ?, ?)");
+                    + "VALUES (default, ?, ?, ?, ?)");
             setParameters(entity, preparedStatement);
             preparedStatement.executeUpdate();
             log.info("[Owners - SQL] Create successful");
@@ -90,13 +111,14 @@ public class JdbcOwnerDao implements OwnersDao {
     public void update(Long id, Owner entity) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Owners "
-                    + "SET name=?, address=?, rating=? WHERE id=?");
+                    + "SET name=?, email=?, age=?, version=? WHERE id=?");
             setParameters(entity, preparedStatement);
-            preparedStatement.setLong(4, id);
+            preparedStatement.setInt(4, entity.getVersion() + 1);
+            preparedStatement.setLong(5, id);
             preparedStatement.executeUpdate();
             log.info("[Owners - SQL] Update successful");
         } catch (SQLException e) {
-            log.error("[Owners - SQL] Create failed... ", e);
+            log.error("[Owners - SQL] Update failed... ", e);
         }
     }
 

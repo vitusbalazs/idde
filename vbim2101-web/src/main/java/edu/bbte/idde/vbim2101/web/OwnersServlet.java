@@ -67,6 +67,7 @@ public class OwnersServlet extends HttpServlet {
         LOGGER.info("POST /owners arrived...");
         try {
             Owner data = objectMapper.readValue(req.getReader(), Owner.class);
+            data.setVersion(1);
             if (data.getName() == null || data.getEmail() == null || data.getAge() == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().println("Bad input format. Maybe a field is missing or is not the right type. (POST)");
@@ -119,6 +120,7 @@ public class OwnersServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     resp.getWriter().println("There was no advertisement with the given ID (PUT)!");
                 } else {
+                    data.setVersion(ownersDao.findById(advID).getVersion());
                     ownersDao.update(advID, data);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     resp.getWriter().println("PUT completed successfully!");

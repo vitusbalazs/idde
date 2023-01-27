@@ -14,13 +14,13 @@ public class MemDaoFactory extends AbstractDaoFactory {
         if (advDao == null) {
             advDao = new MemAdvertisementDao();
             advDao.create(
-                    new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1, 1L)
+                    new Advertisement("Elado monostori lakas", "Portile de fier 4", 150000, 60, 1, 1L, 1)
             );
             advDao.create(
-                    new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3, 2L)
+                    new Advertisement("Elado marasti negyedi lakas", "Piata Abator 4-7", 150000, 115, 3, 2L, 1)
             );
             advDao.create(
-                    new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4, 1L)
+                    new Advertisement("Elado grigorescu negyedi lakas", "Bartok Bela 15", 95000, 72, 4, 1L, 1)
             );
 
         }
@@ -32,13 +32,13 @@ public class MemDaoFactory extends AbstractDaoFactory {
         if (ownerDao == null) {
             ownerDao = new MemOwnersDao();
             ownerDao.create(
-                    new Owner("Jakab-Gyik Sarolta", "jgysarolta@gmail.com", 20)
+                    new Owner("Jakab-Gyik Sarolta", "jgysarolta@gmail.com", 20, 1)
             );
             ownerDao.create(
-                    new Owner("Vitus Balazs", "vitusbalazs01@yahoo.com", 21)
+                    new Owner("Vitus Balazs", "vitusbalazs01@yahoo.com", 21, 1)
             );
             ownerDao.create(
-                    new Owner("Gyula aluGy", "alugyjol@gyula.com", 20)
+                    new Owner("Gyula aluGy", "alugyjol@gyula.com", 20, 1)
             );
         }
         return ownerDao;
